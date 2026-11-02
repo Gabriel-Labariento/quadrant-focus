@@ -4,15 +4,17 @@ A pomodoro timer, an Eisenhower matrix, and binaural beats on one quiet page.
 
 Use it at [quadrant-focus.vercel.app](https://quadrant-focus.vercel.app).
 
-![Quadrant Focus, with the timer on the left and the four boxes of the matrix on the right](docs/screenshot.jpg)
+![Quadrant Focus, with a ring timer on the left, the matrix drawn as two crossing lines on the right, and a strip of daily and weekly progress underneath](docs/screenshot.jpg)
 
 I wanted three things in one place: the simple timer of [Pomofocus](https://pomofocus.io), an Eisenhower matrix for deciding what deserves my pomodoros in the first place, and binaural beats for when I need help settling in. Most tools give you one of these. Quadrant Focus puts them on a single page and then tries hard to stay out of the way.
 
 ## How it works
 
-You sort tasks into four boxes. Do is urgent and important. Schedule is important but not urgent. Delegate is urgent but not important. Eliminate is neither, so it stays folded into a thin strip at the bottom.
+You sort tasks into four quadrants. Do is urgent and important. Schedule is important but not urgent. Delegate is urgent but not important. Eliminate is neither, so it stays folded into a thin strip at the bottom.
 
-Click a task to focus on it, then press Start. Each finished pomodoro fills one of that task's dots, so you can see how your estimate compares with what the work took. When a session ends, a short card tells you what you just spent 25 minutes on before the break begins. While a pomodoro runs, everything except the task you picked fades back.
+Click a task to focus on it, then press Start. Each finished pomodoro fills one of that task's dots, so you can see how your estimate compares with what the work took. When a session ends, a short card tells you what you just spent 25 minutes on before the break begins. While a pomodoro runs, everything except the timer and the task you picked fades back.
+
+Under the matrix, a small strip counts the pomodoros you finish: today, grouped by your long-break cycle, and across the last seven days. It is a good feeling to see how much work you have done, so I wanted that in plain view.
 
 The timer follows the usual rhythm: 25 minutes of focus, a 5-minute break, and a 15-minute break after every fourth pomodoro. You can change all of these in Settings.
 
@@ -38,7 +40,7 @@ Frankly, the research on whether binaural beats help focus is mixed. I treat the
 
 ## Your data stays in your browser
 
-There is no account and no server. Tasks and settings are saved in your browser's local storage, so they stay on one device and in one browser. Clearing your site data, or opening the page in a private window, starts you from scratch.
+There is no account and no server. Tasks, settings, and your pomodoro history are saved in your browser's local storage, so they stay on one device and in one browser. Clearing your site data, or opening the page in a private window, starts you from scratch.
 
 ## Keyboard shortcuts
 

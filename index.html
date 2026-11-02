@@ -14,388 +14,349 @@ img { max-width: 100%; }
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&display=swap">
 <style>
-/* Layout: split cockpit. A fixed-width left rail holds the timer and sound deck; the right pane is the 2x2 Eisenhower grid filling the remaining screen. Stacks below 900px. */
+/* Layout: Ink. A quiet left rail (dial timer, beats) beside an Eisenhower matrix drawn as two crossing hairlines, with a progress strip underneath. One deliberate dark look; the accent shifts per session type. */
 :root {
-  --focus: #b0473b;
-  --short: #3d7c71;
-  --long: #4a5b8c;
-  --on: #fffaf6;
-  --veil: rgba(255, 255, 255, 0.13);
-  --veil-strong: rgba(0, 0, 0, 0.16);
-  --press: #e6dcd5;
-  --card: #fffaf6;
-  --ink: #2b2522;
-  --muted: #7b6f68;
-  --line: #e6ddd7;
-  --field: #f5eee9;
-  --sel: #f3e6df;
-  --q1: #b8432f;
-  --q2: #2f6b96;
-  --q3: #a0701a;
-  --q4: #6f6863;
-  --scrim: rgba(20, 14, 12, 0.5);
+  --bg: #151a22;
+  --panel: #1b212b;
+  --fg: #e4e7ec;
+  --strong: #f3f5f8;
+  --dim: #b7bec9;
+  --muted: #8b93a1;
+  --accent: #a9b8dc;
+  --line: rgba(228, 231, 236, 0.10);
+  --line-strong: rgba(228, 231, 236, 0.28);
+  --glow: rgba(169, 184, 220, 0.07);
+  --field: rgba(228, 231, 236, 0.04);
+  --danger: #e3a197;
+  --scrim: rgba(6, 8, 12, 0.6);
   --display: "Instrument Serif", "Iowan Old Style", "Times New Roman", Georgia, serif;
   --body: "Geist", "Helvetica Neue", "Segoe UI", system-ui, sans-serif;
-  --mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
-  --mode: var(--focus);
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --focus: #6f2e27; --short: #22504a; --long: #2c3859;
-    --on: #fbefe8; --veil: rgba(255,255,255,0.08); --veil-strong: rgba(0,0,0,0.28);
-    --press: #c9bab1; --card: #1f1a18; --ink: #f0e7e1; --muted: #a59890;
-    --line: #362e2b; --field: #2a2421; --sel: #332925;
-    --q1: #e2735f; --q2: #6ea6d4; --q3: #d6a24c; --q4: #a69e98;
-    --scrim: rgba(0,0,0,0.6);
-    color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --focus: #6f2e27; --short: #22504a; --long: #2c3859;
-  --on: #fbefe8; --veil: rgba(255,255,255,0.08); --veil-strong: rgba(0,0,0,0.28);
-  --press: #c9bab1; --card: #1f1a18; --ink: #f0e7e1; --muted: #a59890;
-  --line: #362e2b; --field: #2a2421; --sel: #332925;
-  --q1: #e2735f; --q2: #6ea6d4; --q3: #d6a24c; --q4: #a69e98;
-  --scrim: rgba(0,0,0,0.6);
+  --slow: 1.2s ease;
   color-scheme: dark;
 }
-body[data-mode="short"] { --mode: var(--short); }
-body[data-mode="long"] { --mode: var(--long); }
+body[data-mode="short"] { --bg: #131b1a; --panel: #19221f; --accent: #9cc3b2; --glow: rgba(156, 195, 178, 0.07); }
+body[data-mode="long"] { --bg: #171a27; --panel: #1d2030; --accent: #bcb0de; --glow: rgba(188, 176, 222, 0.07); }
 
 * { box-sizing: border-box; }
 html, body { min-height: 100%; }
 body {
-  background: var(--mode);
-  color: var(--on);
+  background: var(--bg);
+  color: var(--fg);
   font-family: var(--body);
   font-size: 15px;
   line-height: 1.5;
-  transition: background-color .7s ease;
+  transition: background-color 1.6s ease;
 }
 button, input, select { font: inherit; color: inherit; }
 button { cursor: pointer; }
-:focus-visible { outline: 2px solid var(--on); outline-offset: 2px; }
-.quad :focus-visible, dialog :focus-visible { outline-color: var(--ink); }
+:focus-visible { outline: 1.5px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+kbd { font-family: var(--body); font-size: 12px; border: 1px solid var(--line-strong); border-radius: 4px; padding: 0 5px; }
 
 .wrap {
-  max-width: 1360px;
+  max-width: 1320px;
   margin: 0 auto;
   padding-left: max(16px, env(safe-area-inset-left, 0px));
   padding-right: max(16px, env(safe-area-inset-right, 0px));
-  padding-block: 10px 40px;
+  padding-block: 20px 36px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
 }
-.cockpit { display: grid; grid-template-columns: 1fr; gap: 22px; }
-.board { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.chrome { transition: opacity var(--slow); }
 
 /* Header */
-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 6px; }
-.brand { display: flex; align-items: center; gap: 10px; font-family: var(--display); font-weight: 400; font-size: 27px; letter-spacing: 0; }
-.brand-mark { width: 26px; height: 26px; display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
-.brand-mark i { background: var(--on); border-radius: 2px; opacity: .45; }
-.brand-mark i:first-child { opacity: 1; }
-.head-actions { display: flex; gap: 8px; }
-.ghost {
-  background: var(--veil); border: 0; border-radius: 6px; padding: 7px 12px;
-  font-size: 14px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px;
-}
-.ghost:hover { background: var(--veil-strong); }
-.ghost svg { width: 16px; height: 16px; }
-.bar { height: 2px; background: var(--veil-strong); border-radius: 2px; overflow: hidden; margin-top: -10px; }
-.bar i { display: block; height: 100%; width: 0; background: var(--on); transition: width .3s linear; }
+header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.brand { font-family: var(--display); font-size: 25px; color: var(--dim); }
+.icon-btn { width: 44px; height: 44px; border: 0; background: none; color: var(--muted); display: grid; place-items: center; border-radius: 50%; }
+.icon-btn:hover { color: var(--fg); }
+.icon-btn svg { width: 18px; height: 18px; }
+
+/* Layout */
+.cockpit { display: grid; grid-template-columns: 1fr; gap: 40px; }
+.column { width: 100%; max-width: 420px; margin: 0 auto; display: flex; flex-direction: column; gap: 26px; }
+.board { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
 
 /* Timer */
-.column { width: 100%; max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; }
-.timer-card { background: var(--veil); border-radius: 10px; padding: 20px 12px 30px; text-align: center; }
-.tabs { display: flex; justify-content: center; gap: 4px; flex-wrap: wrap; }
-.tabs button { background: none; border: 0; padding: 4px 12px; border-radius: 6px; font-size: 15px; }
-.tabs button[aria-selected="true"] { background: var(--veil-strong); font-weight: 700; }
-.time {
-  font-family: var(--display); font-weight: 400; font-variant-numeric: tabular-nums lining-nums;
-  font-size: clamp(104px, 30vw, 156px); line-height: .95; letter-spacing: -0.01em;
-  margin: 10px 0 20px;
-}
-.controls { display: flex; justify-content: center; align-items: center; gap: 18px; position: relative; }
+.tabs { display: flex; gap: 22px; flex-wrap: wrap; }
+.tabs button { background: none; border: 0; padding: 4px 0; font-size: 14px; color: var(--muted); border-bottom: 1px solid transparent; transition: color .3s, border-color 1.6s; }
+.tabs button:hover { color: var(--dim); }
+.tabs button[aria-selected="true"] { color: var(--fg); border-bottom-color: var(--accent); }
+.timer { position: relative; display: flex; flex-direction: column; align-items: center; gap: 26px; }
+.dial { position: relative; width: min(300px, 78vw); aspect-ratio: 1; max-width: 100%; }
+.dial svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.dial .track { fill: none; stroke: var(--line); stroke-width: 1.5; }
+.dial .ring { fill: none; stroke: var(--accent); stroke-width: 2; stroke-linecap: round; transition: stroke-dashoffset .3s linear, stroke 1.6s ease; }
+.dial .glow { fill: var(--glow); transform-origin: center; transform-box: fill-box; transition: fill 1.6s ease; }
+body.running .dial .glow { animation: breathe 7s ease-in-out infinite; }
+.dial-text { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-align: center; padding: 0 40px; }
+.time { font-family: var(--display); font-size: clamp(76px, 24vw, 92px); line-height: 1; letter-spacing: -0.01em; font-variant-numeric: tabular-nums lining-nums; }
+.caption { margin: 0; font-family: var(--display); font-style: italic; font-size: 17px; line-height: 1.25; color: var(--muted); max-width: 210px; text-wrap: balance; overflow-wrap: anywhere; }
+.controls { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; position: relative; }
 .start {
-  width: 200px; max-width: 70%; padding: 14px 0; border: 0; border-radius: 6px;
-  background: var(--on); color: var(--mode);
-  font-family: var(--body); font-weight: 700; font-size: 18px; letter-spacing: .14em; text-transform: uppercase;
-  box-shadow: 0 6px 0 var(--press);
-  transition: color .7s ease, transform .08s, box-shadow .08s;
+  min-height: 44px; padding: 0 40px; border-radius: 999px; border: 1px solid var(--line-strong); background: none;
+  font-weight: 500; letter-spacing: .04em; transition: border-color .3s, background-color .3s;
 }
-.start.running { transform: translateY(6px); box-shadow: none; }
-.skip { position: absolute; left: calc(50% + 118px); background: none; border: 0; padding: 6px; opacity: .85; }
-.skip svg { width: 28px; height: 28px; display: block; }
-.skip:hover { opacity: 1; }
-.session { text-align: center; display: flex; flex-direction: column; gap: 2px; }
-.session .round { opacity: .7; font-size: 14px; }
-.session .label { font-family: var(--display); font-weight: 400; font-size: 25px; line-height: 1.2; text-wrap: balance; }
-.session .label strong { font-weight: 400; font-style: italic; }
+.start:hover { border-color: var(--fg); }
+.skip { position: absolute; left: calc(50% + 78px); min-height: 44px; border: 0; background: none; color: var(--muted); font-size: 13px; padding: 0 10px; }
+.skip:hover { color: var(--fg); }
 
-/* Sound deck */
-.deck { border-radius: 10px; padding: 4px 2px; display: flex; flex-direction: column; gap: 12px; transition: background-color .2s; }
-.deck.open { background: var(--veil); padding: 12px 14px; }
+/* Session-end card */
+.cheer {
+  position: absolute; inset: -4px -4px -8px; z-index: 1; background: var(--bg); display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 8px; text-align: center; padding: 20px;
+  animation: rise .6s cubic-bezier(.2, .8, .3, 1); transition: background-color 1.6s ease;
+}
+.cheer-kicker { margin: 0; font-size: 13px; color: var(--muted); letter-spacing: .04em; }
+.cheer-main { margin: 0; font-family: var(--display); font-size: 32px; line-height: 1.15; max-width: 16ch; text-wrap: balance; }
+.cheer-main em { font-style: italic; }
+.cheer-sub { margin: 0; font-size: 14px; color: var(--muted); }
+.cheer-btn { margin-top: 14px; min-height: 44px; padding: 0 28px; border-radius: 999px; border: 1px solid var(--line-strong); background: none; font-weight: 500; }
+.cheer-btn:hover { border-color: var(--fg); }
+
+/* Sound */
+.deck { display: flex; flex-direction: column; gap: 14px; margin-top: 6px; }
 .deck-head { display: flex; align-items: center; gap: 12px; }
-.play {
-  width: 44px; height: 44px; flex: none; border-radius: 50%; border: 0;
-  background: var(--on); color: var(--mode); display: grid; place-items: center;
-  transition: color .7s ease;
-}
-.play svg { width: 18px; height: 18px; }
-.deck-title { flex: 1; min-width: 0; }
-.deck-title b { font-weight: 600; font-size: 15px; }
-.deck-sub { display: block; font-size: 12.5px; opacity: .75; }
-.eq { display: inline-flex; gap: 2px; align-items: flex-end; height: 12px; margin-left: 6px; vertical-align: -1px; }
-.eq i { width: 3px; background: var(--on); height: 4px; border-radius: 1px; }
+.play { width: 36px; height: 36px; flex: none; border-radius: 50%; border: 1px solid var(--line-strong); background: none; display: grid; place-items: center; }
+.play:hover { border-color: var(--fg); }
+.play svg { width: 12px; height: 12px; }
+.deck-title { flex: 1; min-width: 0; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.deck-title b { font-weight: 500; font-size: 14px; }
+.deck-sub { font-size: 13px; color: var(--muted); }
+.eq { display: inline-flex; gap: 2px; align-items: flex-end; height: 10px; }
+.eq i { width: 2px; height: 3px; background: var(--accent); border-radius: 1px; }
 .deck:not(.playing) .eq { display: none; }
-.playing .eq i { animation: eq 1.4s ease-in-out infinite; }
+.playing .eq i { animation: eq 1.6s ease-in-out infinite; }
 .playing .eq i:nth-child(2) { animation-delay: -.5s; }
-.playing .eq i:nth-child(3) { animation-delay: -.9s; }
-@keyframes eq { 0%,100% { height: 3px; } 50% { height: 12px; } }
-.tune { background: none; border: 0; border-radius: 6px; padding: 6px 10px; font-size: 13px; font-weight: 600; opacity: .8; }
-.tune:hover { opacity: 1; background: var(--veil); }
-.deck-body { display: flex; flex-direction: column; gap: 14px; padding-top: 4px; border-top: 1px solid var(--veil-strong); }
+.playing .eq i:nth-child(3) { animation-delay: -1s; }
+.tune { min-height: 44px; border: 0; background: none; color: var(--muted); font-size: 13px; padding: 0 4px; }
+.tune:hover { color: var(--fg); }
+.deck-body { display: flex; flex-direction: column; gap: 14px; border-top: 1px solid var(--line); padding-top: 16px; }
 .deck:not(.open) .deck-body { display: none; }
-.presets { display: flex; flex-wrap: wrap; gap: 6px; padding-top: 10px; }
-.chip {
-  border: 1px solid var(--veil-strong); background: none; border-radius: 999px;
-  padding: 5px 11px; font-size: 13px; line-height: 1.2; text-align: left;
-}
-.chip small { display: block; opacity: .75; font-size: 11px; }
-.chip[aria-pressed="true"] { background: var(--on); color: var(--mode); border-color: var(--on); }
-.slider { display: grid; grid-template-columns: 96px 1fr 70px; gap: 10px; align-items: center; font-size: 13px; }
-.slider output { font-family: var(--mono); text-align: right; font-variant-numeric: tabular-nums; }
-input[type="range"] { width: 100%; accent-color: var(--on); }
-.deck-row { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; font-size: 13px; }
-.seg { display: inline-flex; background: var(--veil-strong); border-radius: 6px; padding: 2px; }
-.seg button { border: 0; background: none; border-radius: 4px; padding: 4px 10px; font-size: 13px; }
-.seg button[aria-pressed="true"] { background: var(--on); color: var(--mode); }
+.presets { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { border: 1px solid var(--line); background: none; border-radius: 10px; padding: 6px 11px; font-size: 13px; line-height: 1.25; text-align: left; color: var(--dim); }
+.chip small { display: block; color: var(--muted); font-size: 11.5px; }
+.chip:hover { border-color: var(--line-strong); }
+.chip[aria-pressed="true"] { border-color: var(--accent); color: var(--fg); }
+.slider { display: grid; grid-template-columns: 100px 1fr 64px; gap: 12px; align-items: center; font-size: 13px; color: var(--dim); }
+.slider output { text-align: right; font-variant-numeric: tabular-nums; color: var(--muted); }
+input[type="range"] { width: 100%; accent-color: var(--accent); }
+.deck-row { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; font-size: 13px; color: var(--dim); }
+.seg { display: inline-flex; gap: 2px; }
+.seg button { border: 1px solid transparent; background: none; border-radius: 999px; padding: 3px 12px; font-size: 13px; color: var(--muted); }
+.seg button[aria-pressed="true"] { border-color: var(--line-strong); color: var(--fg); }
 .check { display: inline-flex; gap: 8px; align-items: center; cursor: pointer; }
-.check input { accent-color: var(--on); width: 16px; height: 16px; }
-.hint { font-size: 12px; opacity: .75; margin: 0; }
+.check input { accent-color: var(--accent); width: 16px; height: 16px; }
+.hint { font-size: 12.5px; color: var(--muted); margin: 0; }
 
-/* Matrix */
-.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-.quick-hint { display: none; margin: -4px 0 0 12px; font-size: 12.5px; opacity: .8; }
+/* Quick add */
+.quick { display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--line); transition: border-color .3s, opacity var(--slow); }
+.quick:focus-within { border-bottom-color: var(--line-strong); }
+.quick input { flex: 1; min-width: 0; border: 0; background: none; padding: 12px 0; font-size: 15px; outline: none; }
+.quick input::placeholder { color: var(--muted); }
+.quick .dest { font-family: var(--display); font-size: 19px; color: var(--accent); white-space: nowrap; }
+.quick .est { font-size: 12.5px; color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.quick button[type="submit"] { border: 0; background: none; color: var(--fg); font-weight: 500; font-size: 14px; min-height: 44px; padding: 0 4px; }
+.help-btn { flex: none; width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--line-strong); background: none; color: var(--muted); font-size: 12.5px; }
+.help-btn:hover, .help-btn[aria-expanded="true"] { color: var(--fg); border-color: var(--fg); }
+.quick-hint { display: none; margin: -8px 0 0; font-size: 12.5px; color: var(--muted); }
 .quick:focus-within + .quick-hint { display: block; }
 .help {
-  display: flex; gap: 8px 16px; align-items: center; justify-content: space-between; flex-wrap: wrap;
-  background: var(--veil); border-radius: 8px; padding: 10px 12px; font-size: 13px;
+  display: flex; gap: 10px 18px; align-items: center; justify-content: space-between; flex-wrap: wrap;
+  border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; font-size: 13.5px; color: var(--dim);
 }
 .help p { margin: 0; max-width: 64ch; }
 .help-actions { display: flex; gap: 6px; }
-.help-actions button { border: 0; border-radius: 5px; padding: 4px 10px; font-weight: 600; font-size: 13px; background: var(--veil-strong); }
-.help-actions #helpDone { background: var(--on); color: var(--mode); }
-.matrix { display: grid; grid-template-columns: 22px 1fr 1fr; grid-template-rows: auto auto auto; gap: 10px; }
-.axis { font-size: 11px; text-transform: uppercase; letter-spacing: .12em; font-weight: 700; opacity: .8; text-align: center; }
-.axis.v { writing-mode: vertical-rl; transform: rotate(180deg); display: grid; place-items: center; }
-.quad {
-  --qc: var(--q1);
-  background: var(--card); color: var(--ink); border-radius: 10px; padding: 14px;
-  display: flex; flex-direction: column; gap: 10px; min-width: 0; min-height: 190px;
-  transition: box-shadow .15s;
-}
-.quad[data-q="2"] { --qc: var(--q2); }
-.quad[data-q="3"] { --qc: var(--q3); }
-.quad[data-q="4"] { --qc: var(--q4); }
-.quad.drop { box-shadow: 0 0 0 3px var(--on), 0 0 0 5px var(--qc); }
-.quad-head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
-.tag {
-  background: color-mix(in srgb, var(--qc) 16%, transparent); color: var(--qc);
-  font-family: var(--display); font-weight: 400; font-size: 21px; line-height: 1.15; padding: 0 9px; border-radius: 5px;
-}
-.quad-head .sub { font-size: 12.5px; color: var(--muted); flex: 1; min-width: 0; }
-.quad:not([data-q="4"]) .quad-add, .elim-toggle { margin-left: auto; }
-.elim-toggle { background: none; border: 0; border-radius: 5px; padding: 2px 8px; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
-.elim-toggle:hover { background: var(--field); color: var(--ink); }
-.quad[data-q="4"] { align-self: start; min-height: 0; padding: 10px 14px; }
-.quad[data-q="4"]:not(.expanded) { gap: 0; }
-.tasks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
-.task { border-radius: 7px; background: none; }
-.task.active { background: var(--sel); }
-.task-row { display: grid; grid-template-columns: 22px 1fr auto auto; align-items: center; gap: 8px; padding: 6px 6px 6px 8px; }
+.help-actions button { min-height: 34px; border: 1px solid var(--line-strong); border-radius: 999px; background: none; padding: 0 14px; font-size: 13px; }
+.help-actions button:hover { border-color: var(--fg); }
+
+/* Matrix: two crossing hairlines */
+.matrix { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: auto auto auto; }
+.axis { font-size: 12px; color: var(--muted); padding-bottom: 10px; }
+.axis + .axis { padding-left: 32px; }
+.quad { min-width: 0; display: flex; flex-direction: column; gap: 4px; border-radius: 6px; transition: opacity var(--slow), background-color .2s; }
+.quad[data-q="1"] { border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 8px 32px 22px 0; border-radius: 0; }
+.quad[data-q="2"] { border-bottom: 1px solid var(--line); padding: 8px 0 22px 32px; border-radius: 0; }
+.quad[data-q="3"] { border-right: 1px solid var(--line); padding: 20px 32px 8px 0; border-radius: 0; }
+.quad[data-q="4"] { padding: 20px 0 8px 32px; align-self: start; }
+.quad.drop { background: var(--glow); }
+.quad-head { display: flex; align-items: baseline; gap: 10px; transition: opacity var(--slow); }
+.quad-head .tag { margin: 0; font-family: var(--display); font-weight: 400; font-size: 28px; line-height: 1.2; }
+.quad[data-q="3"] .tag { font-size: 24px; color: var(--dim); }
+.quad[data-q="4"] .tag { font-size: 24px; color: var(--muted); }
+.quad-head .sub { display: none; font-size: 12.5px; color: var(--muted); }
+.quad-add, .elim-toggle { margin-left: auto; border: 0; background: none; color: var(--muted); min-height: 32px; padding: 0 6px; border-radius: 6px; }
+.quad-add { font-size: 20px; line-height: 1; }
+.elim-toggle + .quad-add { margin-left: 0; }
+.elim-toggle { font-size: 13px; font-variant-numeric: tabular-nums; }
+.quad-add:hover, .elim-toggle:hover { color: var(--fg); }
+
+.tasks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.task { transition: opacity var(--slow); }
+.task-row { display: grid; grid-template-columns: 18px 1fr auto auto; align-items: center; gap: 14px; padding: 7px 0; }
 .tick {
-  width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--line); background: none; padding: 0;
-  display: grid; place-items: center; color: var(--card); transition: background-color .2s, border-color .2s;
+  width: 18px; height: 18px; border-radius: 50%; border: 1.25px solid var(--line-strong); background: none; padding: 0;
+  display: grid; place-items: center; color: var(--bg); transition: background-color .25s, border-color .25s;
 }
-.tick:hover { border-color: var(--qc); }
-.tick svg { width: 12px; height: 12px; }
+.tick:hover { border-color: var(--accent); }
+.tick svg { width: 11px; height: 11px; }
 .tick svg path { stroke-dasharray: 24; stroke-dashoffset: 24; transition: stroke-dashoffset .3s ease .08s; }
-.task.done .tick { background: var(--qc); border-color: var(--qc); }
+.task.done .tick { background: var(--accent); border-color: var(--accent); }
 .task.done .tick svg path { stroke-dashoffset: 0; }
-.task-name {
-  background: none; border: 0; text-align: left; padding: 0; min-width: 0; overflow-wrap: anywhere;
-  font-size: 14.5px; line-height: 1.35;
-}
-.task.active .task-name { font-weight: 700; }
+.task.active .tick { border-color: var(--accent); }
+.task-name { background: none; border: 0; text-align: left; padding: 2px 0; min-width: 0; overflow-wrap: anywhere; font-size: 15px; line-height: 1.4; color: var(--dim); transition: color .3s; }
+.task-name:hover { color: var(--fg); }
+.task.active .task-name { color: var(--strong); }
 .task.done .task-name { text-decoration: line-through; color: var(--muted); }
-.dots { display: inline-flex; flex-wrap: wrap; justify-content: flex-end; gap: 3px; max-width: 78px; }
-.dot { width: 8px; height: 8px; border-radius: 50%; border: 1.5px solid var(--qc); }
-.dot.on { background: var(--qc); }
+.task.leaving { opacity: 0; transform: translateY(4px); transition: opacity .3s ease .32s, transform .3s ease .32s; }
+.dots { display: inline-flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px; max-width: 80px; }
+.dot { width: 6px; height: 6px; border-radius: 50%; border: 1px solid var(--accent); transition: border-color 1.6s, background-color 1.6s; }
+.dot.on { background: var(--accent); }
 .dot.over { background: var(--muted); border-color: var(--muted); }
-.dot.pop { animation: pop .7s cubic-bezier(.3, 1.8, .5, 1); }
-@keyframes pop { 0% { transform: scale(0); } 100% { transform: scale(1); } }
-.dots-more { font-family: var(--mono); font-size: 11px; color: var(--muted); line-height: 8px; }
-.task.leaving { opacity: 0; transform: translateY(6px); transition: opacity .25s ease .32s, transform .25s ease .32s; }
-.donebox { font-size: 13px; color: var(--muted); }
-.donebox summary { cursor: pointer; list-style: none; display: inline-flex; gap: 6px; align-items: center; padding: 3px 8px; border-radius: 5px; }
+.dot.pop { animation: pop .8s cubic-bezier(.3, 1.5, .5, 1); }
+.dots-more { font-size: 11px; color: var(--muted); line-height: 6px; }
+.more { background: none; border: 0; padding: 6px; border-radius: 6px; color: var(--muted); }
+.more:hover { color: var(--fg); }
+.more svg { width: 16px; height: 16px; display: block; }
+.task-tools { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; padding: 0 0 10px 32px; font-size: 12.5px; color: var(--muted); }
+.task-tools .grp { display: inline-flex; gap: 4px; align-items: center; }
+.mini { border: 1px solid var(--line); background: none; border-radius: 999px; padding: 2px 10px; font-size: 12.5px; color: var(--dim); min-width: 28px; }
+.mini:hover { border-color: var(--line-strong); }
+.mini[aria-pressed="true"] { border-color: var(--accent); color: var(--fg); }
+.mini.danger { color: var(--danger); }
+.empty { color: var(--muted); font-size: 13.5px; padding: 6px 0; }
+.donebox { font-size: 13px; color: var(--muted); margin-top: 4px; }
+.donebox summary { cursor: pointer; list-style: none; display: inline-flex; gap: 6px; align-items: center; padding: 4px 0; }
 .donebox summary::-webkit-details-marker { display: none; }
-.donebox summary::before { content: "▸"; font-size: 10px; transition: transform .15s; }
+.donebox summary::before { content: "▸"; font-size: 9px; transition: transform .2s; }
 .donebox[open] summary::before { transform: rotate(90deg); }
-.donebox summary:hover { background: var(--field); color: var(--ink); }
-.donebox .tasks { overflow: visible; }
-.quad-add { background: none; border: 0; color: var(--muted); border-radius: 5px; padding: 0 6px; font-size: 18px; line-height: 1.2; }
-.quad-add:hover { background: var(--field); color: var(--qc); }
+.donebox summary:hover { color: var(--fg); }
 
-/* Quick add */
-.quick {
-  --qc: var(--q2);
-  display: flex; align-items: center; gap: 8px; background: var(--card); color: var(--ink);
-  border-radius: 10px; padding: 6px 6px 6px 12px;
-}
-.quick[data-q="1"] { --qc: var(--q1); }
-.quick[data-q="3"] { --qc: var(--q3); }
-.quick[data-q="4"] { --qc: var(--q4); }
-.quick:focus-within { box-shadow: 0 0 0 2px var(--on); }
-.quick input { flex: 1; min-width: 0; border: 0; background: none; padding: 6px 0; font-size: 15px; color: var(--ink); outline: none; }
-.quick input::placeholder { color: var(--muted); }
-.quick .tag { font-size: 17px; white-space: nowrap; }
-.quick .est { font-family: var(--mono); font-size: 12px; color: var(--muted); white-space: nowrap; }
-.quick button[type="submit"] { border: 0; background: var(--qc); color: var(--card); border-radius: 7px; padding: 7px 14px; font-weight: 700; font-size: 14px; }
-.help-btn {
-  flex: none; width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--line); background: none;
-  color: var(--muted); font-size: 13px; font-weight: 600; margin-right: 2px;
-}
-.help-btn:hover, .help-btn[aria-expanded="true"] { color: var(--ink); border-color: var(--muted); }
-
-/* Row and box controls appear on hover where hovering exists */
 @media (hover: hover) {
-  .more, .quad-add { opacity: 0; transition: opacity .15s; }
+  .more, .quad-add { opacity: 0; transition: opacity .2s; }
   .task:hover .more, .task:focus-within .more, .more[aria-expanded="true"],
   .quad:hover .quad-add, .quad-add:focus-visible { opacity: 1; }
 }
 
-/* Deep focus: while a pomodoro runs, everything but the focused task recedes */
-.quad, .task, .quick, .summary, .help { transition: opacity .5s ease; }
-body.deep .task:not(.active) { opacity: .35; }
-body.deep .quad:not(:has(.task.active)) { opacity: .5; }
-body.deep .quick, body.deep .summary, body.deep .help { opacity: .45; }
-body.deep .quad:hover, body.deep .quad:hover .task, body.deep .quick:focus-within { opacity: 1; }
+/* Progress */
+.progress { display: flex; flex-wrap: wrap; gap: 20px 48px; align-items: flex-end; border-top: 1px solid var(--line); padding-top: 18px; transition: opacity var(--slow); }
+.today { display: flex; flex-direction: column; gap: 10px; }
+.today-top { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.today-n { font-family: var(--display); font-size: 40px; line-height: 1; font-variant-numeric: tabular-nums; }
+.today-label { font-size: 13px; color: var(--muted); }
+.sets { display: flex; flex-wrap: wrap; gap: 8px 12px; }
+.set { display: flex; gap: 5px; }
+.pip { width: 9px; height: 9px; border-radius: 50%; border: 1px solid var(--line-strong); transition: background-color 1.6s, border-color 1.6s; }
+.pip.on { background: var(--accent); border-color: var(--accent); }
+.pip.next { border-color: var(--accent); }
+body.running[data-mode="focus"] .pip.next { animation: breathe 7s ease-in-out infinite; }
+.pip.pop { animation: pop .9s cubic-bezier(.3, 1.5, .5, 1); }
+.week { display: flex; align-items: flex-end; gap: 14px; }
+.bars { display: flex; gap: 8px; align-items: flex-end; }
+.day { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.day i { width: 6px; border-radius: 3px; background: var(--line-strong); transition: height .6s ease, background-color 1.6s; }
+.day.today i { background: var(--accent); }
+.day span { font-size: 11px; color: var(--muted); }
+.day.today span { color: var(--fg); }
+.week-total { font-size: 13px; color: var(--muted); padding-bottom: 18px; }
+.summary { margin: 0 0 0 auto; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
 
-/* Session-end card */
-.timer-card { position: relative; }
-.cheer {
-  position: absolute; inset: 0; border-radius: 10px; background: var(--mode);
-  box-shadow: inset 0 0 0 2px var(--veil); display: flex; flex-direction: column;
-  align-items: center; justify-content: center; gap: 6px; padding: 20px; text-align: center;
-  animation: rise .45s cubic-bezier(.2, .9, .3, 1);
-}
-@keyframes rise { from { opacity: 0; transform: translateY(10px) scale(.98); } to { opacity: 1; transform: none; } }
-.cheer-kicker { margin: 0; font-size: 12px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; opacity: .8; }
-.cheer-main { margin: 0; font-family: var(--display); font-size: 34px; line-height: 1.12; text-wrap: balance; max-width: 18ch; }
-.cheer-main em { font-style: italic; }
-.cheer-sub { margin: 0; font-size: 14px; opacity: .85; }
-.cheer-btn {
-  margin-top: 12px; border: 0; border-radius: 6px; background: var(--on); color: var(--mode);
-  padding: 10px 20px; font-weight: 700; font-size: 14px; letter-spacing: .1em; text-transform: uppercase;
-}
-.more { background: none; border: 0; padding: 4px; border-radius: 5px; color: var(--muted); }
-.more:hover { background: var(--field); color: var(--ink); }
-.more svg { width: 16px; height: 16px; display: block; }
-.task-tools { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; padding: 2px 8px 10px 38px; font-size: 12.5px; color: var(--muted); }
-.task-tools .grp { display: inline-flex; gap: 4px; align-items: center; }
-.mini {
-  border: 1px solid var(--line); background: var(--card); border-radius: 5px; padding: 2px 8px;
-  font-size: 12.5px; color: var(--ink); min-width: 28px;
-}
-.mini[aria-pressed="true"] { background: var(--ink); color: var(--card); border-color: var(--ink); }
-.mini.danger { color: var(--q1); }
-.empty { color: var(--muted); font-size: 13px; padding: 4px 8px; margin: 0; }
-.summary { margin: 0; text-align: center; font-size: 13px; opacity: .8; font-variant-numeric: tabular-nums; }
-kbd { font-family: var(--mono); background: var(--veil); border-radius: 4px; padding: 0 5px; }
-.keys { margin: 0; font-size: 13px; line-height: 1.9; }
-.dlg kbd { background: var(--field); border: 1px solid var(--line); }
+/* Deep focus: while a pomodoro runs, only the timer and the task you picked stay bright */
+body.deep .chrome { opacity: .2; }
+body.deep .task:not(.active) { opacity: .18; }
+body.deep .quad:not(:has(.task.active)) { opacity: .14; }
+body.deep .progress { opacity: .55; }
+body.deep .quad:hover, body.deep .quad:hover .task, body.deep .quick:focus-within, body.deep .chrome:hover { opacity: 1; }
 
 /* Settings */
 dialog {
-  border: 0; border-radius: 12px; padding: 0; background: var(--card); color: var(--ink);
-  width: min(420px, calc(100vw - 32px));
+  border: 1px solid var(--line); border-radius: 16px; padding: 0; background: var(--panel); color: var(--fg);
+  width: min(420px, calc(100vw - 32px)); transition: background-color 1.6s ease;
 }
 dialog::backdrop { background: var(--scrim); }
-.dlg { padding: 20px; display: flex; flex-direction: column; gap: 16px; }
-.dlg h3 { margin: 0; font-family: var(--display); font-weight: 400; font-size: 28px; }
-.dlg h4 { margin: 0; font-size: 11px; text-transform: uppercase; letter-spacing: .12em; color: var(--muted); }
+.dlg { padding: 22px; display: flex; flex-direction: column; gap: 16px; }
+.dlg h3 { margin: 0; font-family: var(--display); font-weight: 400; font-size: 30px; }
+.dlg h4 { margin: 4px 0 0; font-size: 12px; font-weight: 500; color: var(--muted); letter-spacing: .04em; }
 .mins { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-.mins label, .field { display: flex; flex-direction: column; gap: 4px; font-size: 12.5px; color: var(--muted); }
+.mins label, .field { display: flex; flex-direction: column; gap: 6px; font-size: 12.5px; color: var(--muted); }
 .mins input, .field input {
-  border: 1px solid var(--line); background: var(--field); border-radius: 7px; padding: 8px 10px; color: var(--ink); width: 100%;
-  font-family: var(--mono);
+  border: 1px solid var(--line); background: var(--field); border-radius: 8px; padding: 8px 10px; width: 100%;
+  font-variant-numeric: tabular-nums;
 }
-.toggle { display: flex; justify-content: space-between; align-items: center; gap: 12px; font-size: 14px; }
-.toggle input { width: 18px; height: 18px; accent-color: var(--q1); }
-.dlg-foot { display: flex; justify-content: flex-end; gap: 8px; border-top: 1px solid var(--line); padding-top: 14px; }
-.btn { border: 0; border-radius: 7px; padding: 8px 16px; font-weight: 700; }
-.btn.primary { background: var(--ink); color: var(--card); }
-.btn.plain { background: var(--field); }
+.toggle { display: flex; justify-content: space-between; align-items: center; gap: 12px; font-size: 14px; color: var(--dim); }
+.toggle input { width: 18px; height: 18px; accent-color: var(--accent); }
+.keys { margin: 0; font-size: 13px; line-height: 2; color: var(--dim); }
+.dlg-foot { display: flex; justify-content: flex-end; gap: 8px; border-top: 1px solid var(--line); padding-top: 16px; }
+.btn { min-height: 40px; border-radius: 999px; padding: 0 18px; font-weight: 500; border: 1px solid var(--line-strong); background: none; }
+.btn.primary { background: var(--fg); color: var(--bg); border-color: var(--fg); }
 
-/* Cockpit: one screen on desktop; quadrants scroll their own lists. */
+@keyframes breathe { 0%, 100% { transform: scale(.94); opacity: .45; } 50% { transform: scale(1); opacity: 1; } }
+@keyframes pop { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+@keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes eq { 0%, 100% { height: 3px; } 50% { height: 10px; } }
+
+/* Cockpit on desktop: one screen, quadrants scroll their own lists */
 @media (min-width: 900px) {
   html, body { height: 100%; }
-  .wrap { height: 100%; padding-block: 10px 16px; }
-  .cockpit { flex: 1; min-height: 0; grid-template-columns: minmax(340px, 392px) minmax(0, 1fr); gap: 20px; }
-  .column { max-width: none; margin: 0; overflow-y: auto; min-height: 0; padding-bottom: 4px; scrollbar-width: thin; }
+  .wrap { height: 100%; padding-block: 24px 24px; }
+  .cockpit { flex: 1; min-height: 0; grid-template-columns: minmax(320px, 380px) minmax(0, 1fr); gap: 64px; }
+  .column { max-width: none; margin: 0; overflow-y: auto; min-height: 0; scrollbar-width: none; }
+  .deck { margin-top: auto; }
   .board { min-height: 0; }
   .matrix { flex: 1; min-height: 0; grid-template-rows: auto minmax(0, 1fr) auto; }
   .quad { min-height: 0; }
-  .quad[data-q="3"] { max-height: 32vh; }
-  .tasks { flex: 1; min-height: 0; overflow-y: auto; scrollbar-width: thin; }
-  .time { font-size: clamp(104px, 10vw, 148px); }
-}
-@media (min-width: 681px) {
-  .quad-head .sub { display: none; }
+  .quad[data-q="3"] { max-height: 30vh; }
+  .tasks { flex: 1; min-height: 0; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--line-strong) transparent; }
 }
 @media (max-width: 680px) {
   .matrix { grid-template-columns: 1fr; }
   .axis { display: none; }
-  .skip { left: auto; right: 4px; }
-  .slider { grid-template-columns: 80px 1fr 58px; }
+  .quad[data-q] { border-right: 0; border-bottom: 1px solid var(--line); padding: 14px 0; }
+  .quad[data-q="4"] { border-bottom: 0; align-self: stretch; }
+  .quad-head .sub { display: inline; }
+  .skip { left: auto; right: 0; }
+  .slider { grid-template-columns: 84px 1fr 54px; }
+  .summary { margin-left: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
-  * { transition: none !important; animation: none !important; }
+  *, *::before { transition: none !important; animation: none !important; }
 }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <header>
-    <div class="brand"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>Quadrant</div>
-    <div class="head-actions">
-      <button class="ghost" id="settingsBtn" type="button">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>
-        Settings
-      </button>
-    </div>
+  <header class="chrome">
+    <span class="brand">Quadrant</span>
+    <button class="icon-btn" id="settingsBtn" type="button" aria-label="Settings">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="2.2" fill="currentColor" stroke="none"/><circle cx="15" cy="17" r="2.2" fill="currentColor" stroke="none"/></svg>
+    </button>
   </header>
-  <div class="bar" aria-hidden="true"><i id="progress"></i></div>
 
   <main class="cockpit">
   <div class="column">
-    <section class="timer-card" aria-label="Timer">
-      <div class="tabs" role="tablist">
-        <button type="button" role="tab" data-mode="focus" id="tab-focus">Pomodoro</button>
-        <button type="button" role="tab" data-mode="short" id="tab-short">Short break</button>
-        <button type="button" role="tab" data-mode="long" id="tab-long">Long break</button>
+    <div class="tabs chrome" role="tablist" aria-label="Session type">
+      <button type="button" role="tab" data-mode="focus" id="tab-focus">Focus</button>
+      <button type="button" role="tab" data-mode="short" id="tab-short">Short break</button>
+      <button type="button" role="tab" data-mode="long" id="tab-long">Long break</button>
+    </div>
+
+    <section class="timer" aria-label="Timer">
+      <div class="dial">
+        <svg viewBox="0 0 300 300" aria-hidden="true">
+          <circle class="glow" cx="150" cy="150" r="128"></circle>
+          <circle class="track" cx="150" cy="150" r="140"></circle>
+          <circle class="ring" id="ring" cx="150" cy="150" r="140" stroke-dasharray="879.6" stroke-dashoffset="0" transform="rotate(-90 150 150)"></circle>
+        </svg>
+        <div class="dial-text">
+          <div class="time" id="time" aria-live="off">25:00</div>
+          <p class="caption" id="caption">Pick a task to focus on</p>
+        </div>
       </div>
-      <div class="time" id="time" aria-live="off">25:00</div>
       <div class="controls">
         <button type="button" class="start" id="startBtn">Start</button>
-        <button type="button" class="skip" id="skipBtn" aria-label="Skip to next session" hidden>
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 5.5v13a1 1 0 0 0 1.5.86l10-6.5a1 1 0 0 0 0-1.72l-10-6.5A1 1 0 0 0 5 5.5Z"/><rect x="17.5" y="5" width="2.5" height="14" rx="1"/></svg>
-        </button>
+        <button type="button" class="skip" id="skipBtn" aria-label="Skip to next session" hidden>Skip</button>
       </div>
       <div class="cheer" id="cheer" role="status" hidden>
         <p class="cheer-kicker" id="cheerKicker"></p>
@@ -405,17 +366,12 @@ dialog::backdrop { background: var(--scrim); }
       </div>
     </section>
 
-    <div class="session">
-      <span class="round" id="round">#1</span>
-      <span class="label" id="sessionLabel">Time to focus!</span>
-    </div>
-
-    <section class="deck" id="deck" aria-label="Binaural beats">
+    <section class="deck chrome" id="deck" aria-label="Binaural beats">
       <div class="deck-head">
         <button type="button" class="play" id="playBtn" aria-label="Play binaural beats"></button>
         <div class="deck-title">
           <b id="readout">Alpha 10 Hz</b><span class="eq" aria-hidden="true"><i></i><i></i><i></i></span>
-          <span class="deck-sub" id="deckSub">Binaural beats</span>
+          <span class="deck-sub" id="deckSub">binaural beats</span>
         </div>
         <button type="button" class="tune" id="deckToggle" aria-expanded="false" aria-controls="deckBody">Tune</button>
       </div>
@@ -443,29 +399,36 @@ dialog::backdrop { background: var(--scrim); }
 
   <section class="board" aria-labelledby="matrixTitle">
     <h2 id="matrixTitle" class="sr-only">Eisenhower matrix</h2>
-    <form class="quick" id="quick" data-q="2" autocomplete="off">
+    <form class="quick chrome" id="quick" data-q="2" autocomplete="off">
       <input id="quickInput" maxlength="160" placeholder="Add a task" aria-label="Add a task" aria-describedby="quickHint">
       <span class="est" id="quickEst"></span>
-      <span class="tag" id="quickDest" hidden>Schedule</span>
+      <span class="dest" id="quickDest" hidden>Schedule</span>
       <button type="submit" id="quickAdd" hidden>Add</button>
       <button type="button" class="help-btn" id="helpBtn" aria-label="How this works" aria-expanded="false" aria-controls="help">?</button>
     </form>
     <p class="quick-hint" id="quickHint">Start with <kbd>!</kbd> urgent, <kbd>*</kbd> important or <kbd>-</kbd> eliminate. End with <kbd>~3</kbd> for 3 pomodoros.</p>
-    <div class="help" id="help" hidden>
-      <p>Click a task to focus on it. Each finished pomodoro fills one of its dots. Drag tasks between boxes, or hover a task and use ⋯ to move, re-estimate or delete it.<span id="exampleNote"> The tasks here are examples.</span></p>
+    <div class="help chrome" id="help" hidden>
+      <p>Click a task to focus on it. Each finished pomodoro fills one of its dots and one in your progress below. Drag tasks between quadrants, or hover a task and use ⋯ to move, re-estimate or delete it.<span id="exampleNote"> The tasks here are examples.</span></p>
       <div class="help-actions">
         <button type="button" id="clearExamples">Clear examples</button>
         <button type="button" id="helpDone">Got it</button>
       </div>
     </div>
     <div class="matrix" id="matrix">
-      <span></span>
-      <span class="axis">Urgent</span>
-      <span class="axis">Not urgent</span>
-      <span class="axis v" style="grid-row:2">Important</span>
-      <span class="axis v" style="grid-row:3">Not important</span>
+      <span class="axis chrome">urgent</span>
+      <span class="axis chrome">not urgent</span>
     </div>
-    <p class="summary" id="summary"></p>
+    <section class="progress" aria-label="Your progress">
+      <div class="today">
+        <div class="today-top"><span class="today-n" id="todayN">0</span><span class="today-label" id="todayLabel">pomodoros today</span></div>
+        <div class="sets" id="sets" aria-hidden="true"></div>
+      </div>
+      <div class="week">
+        <div class="bars" id="bars" role="img"></div>
+        <span class="week-total" id="weekTotal"></span>
+      </div>
+      <p class="summary" id="summary"></p>
+    </section>
   </section>
   </main>
 </div>
@@ -475,7 +438,7 @@ dialog::backdrop { background: var(--scrim); }
     <h3>Settings</h3>
     <h4>Time in minutes</h4>
     <div class="mins">
-      <label for="setFocus">Pomodoro<input type="number" id="setFocus" min="1" max="180" required></label>
+      <label for="setFocus">Focus<input type="number" id="setFocus" min="1" max="180" required></label>
       <label for="setShort">Short break<input type="number" id="setShort" min="1" max="60" required></label>
       <label for="setLong">Long break<input type="number" id="setLong" min="1" max="90" required></label>
     </div>
@@ -487,9 +450,9 @@ dialog::backdrop { background: var(--scrim); }
     <h4>Shortcuts</h4>
     <p class="keys"><kbd>Space</kbd> start or pause · <kbd>S</kbd> skip · <kbd>B</kbd> beats on or off</p>
     <h4>Data</h4>
-    <label class="toggle" for="resetCount">Reset pomodoro count to #1 <button type="button" class="mini" id="resetCount">Reset</button></label>
+    <label class="toggle" for="resetCount">Restart the long-break cycle <button type="button" class="mini" id="resetCount">Restart</button></label>
     <div class="dlg-foot">
-      <button type="button" class="btn plain" id="cancelSettings">Cancel</button>
+      <button type="button" class="btn" id="cancelSettings">Cancel</button>
       <button type="submit" class="btn primary">Save</button>
     </div>
   </form>
@@ -548,6 +511,20 @@ dialog::backdrop { background: var(--scrim); }
   let elimOpen = store.get("elimOpen", false);
   let helpSeen = store.get("helpSeen", false), helpOpen = !helpSeen;
 
+  // Finished focus sessions per local day: { "2026-11-02": { n: 4, min: 100 } }
+  const dayKey = d => d.toLocaleDateString("en-CA");
+  let history = store.get("history", {});
+  let justEarned = false;
+  function recordFocus(minutes) {
+    const k = dayKey(new Date());
+    const day = history[k] || { n: 0, min: 0 };
+    history[k] = { n: day.n + 1, min: day.min + minutes };
+    const cutoff = dayKey(new Date(Date.now() - 90 * 864e5));
+    for (const key of Object.keys(history)) if (key < cutoff) delete history[key];
+    store.set("history", history);
+    justEarned = true;
+  }
+
   const saveTasks = () => { store.set("tasks", tasks); store.set("active", activeId); store.set("examples", showExamples); };
 
   // ---------- Timer ----------
@@ -593,6 +570,7 @@ dialog::backdrop { background: var(--scrim); }
       if (!skipped) {
         completedFocus++;
         store.set("completed", completedFocus);
+        recordFocus(settings.focus);
         if (t) { t.done++; justFilled = { id: t.id, i: t.done - 1 }; saveTasks(); }
       }
       const next = completedFocus > 0 && completedFocus % settings.every === 0 && !skipped ? "long" : "short";
@@ -644,8 +622,8 @@ dialog::backdrop { background: var(--scrim); }
   function renderTime() {
     const txt = fmt(timer.remaining);
     $("#time").textContent = txt;
-    const pct = 100 * (1 - timer.remaining / durationOf(timer.mode));
-    $("#progress").style.width = pct + "%";
+    // the ring drains as the session runs
+    $("#ring").style.strokeDashoffset = (879.6 * (1 - timer.remaining / durationOf(timer.mode))).toFixed(1);
     document.title = txt + " · " + (timer.mode === "focus" ? "Focus" : "Break");
   }
   function render() {
@@ -655,17 +633,55 @@ dialog::backdrop { background: var(--scrim); }
     sb.textContent = timer.running ? "Pause" : "Start";
     sb.classList.toggle("running", timer.running);
     $("#skipBtn").hidden = !timer.running;
+    document.body.classList.toggle("running", timer.running);
     document.body.classList.toggle("deep", timer.running && timer.mode === "focus" && !!activeId);
-    $("#round").textContent = "#" + (completedFocus + (timer.mode === "focus" ? 1 : 0));
     const t = tasks.find(t => t.id === activeId);
-    const label = $("#sessionLabel");
-    label.textContent = "";
-    if (timer.mode === "focus" && t) {
-      label.append("Focusing on ");
-      const s = document.createElement("strong"); s.textContent = t.text; label.append(s);
-    } else {
-      label.textContent = timer.mode === "focus" ? "Time to focus!" : timer.mode === "long" ? "Long break. Step away from the screen." : "Time for a break!";
+    $("#caption").textContent = timer.mode === "focus"
+      ? (t ? t.text : "Pick a task to focus on")
+      : timer.mode === "long" ? "Step away from the screen" : "Stand up and stretch";
+    renderProgress();
+  }
+
+  function renderProgress() {
+    const today = history[dayKey(new Date())] || { n: 0, min: 0 };
+    const h = Math.floor(today.min / 60), m = today.min % 60;
+    const focused = today.min ? ` · ${h ? h + "h" : ""}${h && m ? " " : ""}${m ? m + "m" : ""} focused` : "";
+    $("#todayN").textContent = today.n;
+    $("#todayLabel").textContent = (today.n === 1 ? "pomodoro today" : "pomodoros today") + focused;
+
+    // finished pips, the one being earned, then empties to the end of the set
+    const per = settings.every, total = Math.min(Math.ceil((today.n + 1) / per) * per, per * 6);
+    const sets = $("#sets");
+    sets.innerHTML = "";
+    for (let s = 0; s < total / per; s++) {
+      const set = document.createElement("span"); set.className = "set";
+      for (let i = s * per; i < (s + 1) * per; i++) {
+        const pip = document.createElement("i");
+        pip.className = "pip" + (i < today.n ? " on" : i === today.n ? " next" : "");
+        if (justEarned && i === today.n - 1) pip.classList.add("pop");
+        set.append(pip);
+      }
+      sets.append(set);
     }
+    justEarned = false;
+
+    const initials = ["S", "M", "T", "W", "T", "F", "S"];
+    const days = Array.from({ length: 7 }, (_, i) => {
+      const d = new Date(Date.now() - (6 - i) * 864e5);
+      return { d, n: (history[dayKey(d)] || { n: 0 }).n };
+    });
+    const peak = Math.max(4, ...days.map(x => x.n));
+    const bars = $("#bars");
+    bars.innerHTML = "";
+    days.forEach((x, i) => {
+      const day = document.createElement("span"); day.className = "day" + (i === 6 ? " today" : "");
+      const bar = document.createElement("i"); bar.style.height = Math.max(2, Math.round(x.n / peak * 40)) + "px";
+      const lab = document.createElement("span"); lab.textContent = initials[x.d.getDay()];
+      day.append(bar, lab); bars.append(day);
+    });
+    const week = days.reduce((a, x) => a + x.n, 0);
+    bars.setAttribute("aria-label", "Pomodoros over the last 7 days: " + days.map(x => x.n).join(", ") + " today");
+    $("#weekTotal").textContent = `${week} in 7 days`;
   }
 
   $("#startBtn").addEventListener("click", () => timer.running ? pause() : start());
@@ -779,7 +795,7 @@ dialog::backdrop { background: var(--scrim); }
     const l = (sound.carrier - sound.beat / 2).toFixed(1).replace(/\.0$/, "");
     const r = (sound.carrier + sound.beat / 2).toFixed(1).replace(/\.0$/, "");
     $("#readout").textContent = `${bandOf(sound.beat)} ${sound.beat} Hz`;
-    $("#deckSub").textContent = "Binaural beats" + (sound.auto && sound.on && !audible() ? " · starts with focus" : "");
+    $("#deckSub").textContent = "binaural beats" + (sound.auto && sound.on && !audible() ? " · starts with focus" : "");
     $("#earHint").textContent = `Left ear ${l} Hz, right ear ${r} Hz. Use headphones: the beat only exists when each ear gets its own tone.`;
     $("#beatRange").value = sound.beat; $("#beatOut").textContent = sound.beat + " Hz";
     $("#carrierRange").value = sound.carrier; $("#carrierOut").textContent = sound.carrier + " Hz";
@@ -820,9 +836,8 @@ dialog::backdrop { background: var(--scrim); }
   QUADS.forEach((Q, i) => {
     const sec = document.createElement("div");
     sec.className = "quad"; sec.dataset.q = Q.q;
-    sec.style.gridColumn = 2 + (i % 2); sec.style.gridRow = 2 + Math.floor(i / 2);
     sec.innerHTML = `
-      <div class="quad-head"><span class="tag">${Q.name}</span><span class="sub">${Q.sub}</span>${Q.q === 4 ? '<button type="button" class="elim-toggle"></button>' : ""}<button type="button" class="quad-add" aria-label="Add a task to ${Q.name}">+</button></div>
+      <div class="quad-head chrome"><h3 class="tag">${Q.name}</h3><span class="sub">${Q.sub}</span>${Q.q === 4 ? '<button type="button" class="elim-toggle"></button>' : ""}<button type="button" class="quad-add" aria-label="Add a task to ${Q.name}">+</button></div>
       <ul class="tasks"></ul>`;
     sec.querySelector(".quad-add").addEventListener("click", () => {
       const inp = $("#quickInput");
@@ -1006,7 +1021,7 @@ dialog::backdrop { background: var(--scrim); }
     if (timer.mode === "focus" && left > 0) mins -= (durationOf("focus") - timer.remaining) / 60000;
     const finish = new Date(Date.now() + mins * 60000);
     const hh = finish.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
-    $("#summary").textContent = `${done} of ${est} pomodoros` + (left > 0 ? ` · done by ${hh}` : "");
+    $("#summary").textContent = `${done} of ${est} planned` + (left > 0 ? ` · done by ${hh}` : "");
     $("#summary").title = left > 0 ? `${left} pomodoros left in Do, Schedule and Delegate, about ${(mins / 60).toFixed(1)} hours with breaks` : "";
   }
 
@@ -1037,7 +1052,7 @@ dialog::backdrop { background: var(--scrim); }
     dlg.showModal ? dlg.showModal() : dlg.setAttribute("open", "");
   });
   $("#cancelSettings").addEventListener("click", () => dlg.close());
-  $("#resetCount").addEventListener("click", e => { completedFocus = 0; store.set("completed", 0); e.target.textContent = "Reset to #1"; render(); renderSummary(); });
+  $("#resetCount").addEventListener("click", e => { completedFocus = 0; store.set("completed", 0); e.target.textContent = "Restarted"; render(); renderSummary(); });
   $("#settingsForm").addEventListener("submit", e => {
     e.preventDefault();
     const clamp = (v, lo, hi, d) => { v = Math.round(+v); return v >= lo && v <= hi ? v : d; };
@@ -1051,7 +1066,7 @@ dialog::backdrop { background: var(--scrim); }
     settings.chime = $("#setChime").checked;
     store.set("settings", settings);
     if (!timer.running && settings[timer.mode] !== before) timer.remaining = durationOf(timer.mode);
-    dlg.close(); $("#resetCount").textContent = "Reset";
+    dlg.close(); $("#resetCount").textContent = "Restart";
     render(); renderSummary();
   });
 
