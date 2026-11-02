@@ -30,7 +30,7 @@ There is one box for adding tasks. A few characters at the start decide where a 
 | `- Reorganize desktop icons` | Eliminate |
 | `Plan next week` | Schedule |
 
-End a task with `~3` to estimate three pomodoros. You can also drag tasks between boxes, or hover over one and use the ⋯ menu.
+End a task with `~3` to estimate three pomodoros. You can also drag tasks between quadrants, or hover over one and use the ⋯ menu.
 
 ## Binaural beats
 
