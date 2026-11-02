@@ -54,7 +54,7 @@ python3 -m http.server
 
 Then open http://localhost:8000.
 
-The source lives in `src/app.html`. After editing it, run `python3 build.py`, which wraps it into the full `index.html` that gets served. I deploy the live site to Vercel with `vercel --prod`, but any static host will do.
+The source lives in `src/app.html`. After editing it, run `python3 build.py`, which wraps it into the full `index.html` that gets served, and commit both files. The live site redeploys on Vercel whenever `main` changes, but any static host will do.
 
 ## Contributing
 
