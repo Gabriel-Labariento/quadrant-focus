@@ -32,6 +32,10 @@ There is one box for adding tasks. A few characters at the start decide where a 
 
 End a task with `~3` to estimate three pomodoros. You can also drag tasks between quadrants, or hover over one and use the ⋯ menu.
 
+## Steps
+
+Big tasks are easier to start when they are broken into small pieces. When you focus a task, its checklist unfolds right under it, and you can keep adding steps by pressing Enter. The timer ring then shows the next step, like "Outline section 3.2", with the task name and "Step 2 of 5" underneath. Other tasks show a quiet count such as "1/5 steps". Once every step is ticked off, the app asks if the task itself is done.
+
 ## Due dates
 
 Add a date anywhere in the task with `@`: `@today`, `@tomorrow`, `@fri`, `@nov12`, or `@12` for the 12th of the month. `!* Submit scholarship form @fri ~2` goes to Do, is due Friday, and is estimated at two pomodoros. You can also set or clear a date from the ⋯ menu.
