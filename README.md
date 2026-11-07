@@ -32,6 +32,12 @@ There is one box for adding tasks. A few characters at the start decide where a 
 
 End a task with `~3` to estimate three pomodoros. You can also drag tasks between quadrants, or hover over one and use the ⋯ menu.
 
+## Due dates
+
+Add a date anywhere in the task with `@`: `@today`, `@tomorrow`, `@fri`, `@nov12`, or `@12` for the 12th of the month. `!* Submit scholarship form @fri ~2` goes to Do, is due Friday, and is estimated at two pomodoros. You can also set or clear a date from the ⋯ menu.
+
+Tasks sort by deadline within each quadrant. A date due today or tomorrow is tinted, and an overdue one turns red. When something in Schedule is due within a day, it offers to move to Do. In the Eisenhower matrix, a close deadline is what turns important work into urgent work, so I wanted the app to say so.
+
 ## Binaural beats
 
 The player sends a slightly different tone to each ear. Your brain hears the difference as a slow pulse: 10 Hz for alpha, 18 Hz for beta, and so on. You need headphones for this to work. On speakers, it is just a hum. Under Tune, you can pick a preset, adjust the tones, add pink or brown noise, and have the beats play only while a pomodoro is running.
