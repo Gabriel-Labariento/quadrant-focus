@@ -40,6 +40,7 @@ body[data-mode="short"] { --bg: #131b1a; --panel: #19221f; --accent: #9cc3b2; --
 body[data-mode="long"] { --bg: #171a27; --panel: #1d2030; --accent: #bcb0de; --glow: rgba(188, 176, 222, 0.07); }
 
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 html, body { min-height: 100%; }
 body {
   background: var(--bg);
@@ -277,6 +278,64 @@ input[type="range"] { width: 100%; accent-color: var(--accent); }
 .donebox[open] summary::before { transform: rotate(90deg); }
 .donebox summary:hover { color: var(--fg); }
 
+/* View switcher */
+.views { display: flex; gap: 18px; }
+.views button { background: none; border: 0; padding: 2px 0; font-size: 13px; color: var(--muted); border-bottom: 1px solid transparent; transition: color .3s, border-color .3s; }
+.views button:hover { color: var(--dim); }
+.views button[aria-selected="true"] { color: var(--fg); border-bottom-color: var(--line-strong); }
+
+/* List: every task in one column, grouped by when it is due */
+.listview, .calview { display: flex; flex-direction: column; min-width: 0; }
+.listview { gap: 20px; }
+.lgroup { flex: none; display: flex; flex-direction: column; gap: 2px; transition: opacity var(--slow); }
+.lgroup-head { margin: 0; display: flex; align-items: baseline; gap: 10px; font-family: var(--display); font-weight: 400; font-size: 22px; line-height: 1.2; }
+.lgroup-head span { font-family: var(--body); font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.lgroup[data-g="late"] .lgroup-head { color: var(--danger); }
+.lgroup[data-g="later"] .lgroup-head, .lgroup[data-g="none"] .lgroup-head { color: var(--dim); }
+.listview .tasks, .cal-panel .tasks { flex: none; overflow: visible; }
+.listview .task[data-q="4"] .task-name, .cal-panel .task[data-q="4"] .task-name { color: var(--muted); }
+.qtag[data-q="1"] { color: var(--dim); }
+
+/* Calendar: a month of deadlines, with the picked day's tasks underneath */
+.calview { gap: 18px; }
+.cal-head { display: flex; align-items: center; gap: 2px; }
+.cal-title { margin: 0 auto 0 0; font-family: var(--display); font-weight: 400; font-size: 26px; line-height: 1.2; }
+.cal-nav { border: 0; background: none; color: var(--muted); min-width: 32px; min-height: 32px; padding: 0 6px; border-radius: 6px; font-size: 13px; }
+.cal-nav.arrow { font-size: 18px; line-height: 1; }
+.cal-nav:hover { color: var(--fg); }
+.cal-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); transition: opacity var(--slow); }
+.cal-wd { font-size: 11.5px; color: var(--muted); padding: 0 6px 6px; }
+.cal-day {
+  min-width: 0; min-height: 68px; border-top: 1px solid var(--line); padding: 4px 6px 6px;
+  display: flex; flex-direction: column; gap: 3px; cursor: pointer; transition: background-color .2s;
+}
+.cal-day:hover { background: var(--field); }
+.cal-day.sel { background: var(--glow); box-shadow: inset 0 0 0 1px var(--line); border-radius: 6px; }
+.cal-day.drop { background: var(--glow); }
+.cal-date {
+  align-self: flex-start; width: 24px; height: 24px; border: 0; background: none; padding: 0; border-radius: 50%;
+  display: grid; place-items: center; font-size: 12.5px; color: var(--dim); font-variant-numeric: tabular-nums;
+}
+.cal-day.out .cal-date { color: var(--muted); opacity: .55; }
+.cal-day.today .cal-date { background: var(--accent); color: var(--bg); }
+.cal-items { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.cal-item { font-size: 11.5px; line-height: 1.35; color: var(--dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cal-item[data-q="1"] { color: var(--fg); }
+.cal-item[data-q="4"] { color: var(--muted); }
+.cal-item.late { color: var(--danger); }
+.cal-item.active { color: var(--strong); text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 3px; }
+.cal-more { font-size: 11px; color: var(--muted); }
+.cal-panel { flex: none; display: flex; flex-direction: column; gap: 4px; transition: opacity var(--slow); }
+.cal-panel-head { display: flex; align-items: baseline; gap: 10px; }
+.cal-panel-head h3 { margin: 0; font-family: var(--display); font-weight: 400; font-size: 22px; line-height: 1.2; }
+.cal-add { margin-left: auto; border: 0; background: none; color: var(--muted); min-height: 32px; padding: 0 6px; border-radius: 6px; font-size: 20px; line-height: 1; }
+.cal-add:hover { color: var(--fg); }
+.cal-hint { margin: 0; font-size: 12.5px; color: var(--muted); padding: 2px 0 6px; }
+
+/* Export, in Settings */
+.exports { display: flex; flex-wrap: wrap; gap: 6px; }
+.exports .mini { padding: 5px 12px; }
+
 @media (hover: hover) {
   .more, .quad-add { opacity: 0; transition: opacity .2s; }
   .task:hover .more, .task:focus-within .more, .more[aria-expanded="true"],
@@ -309,7 +368,9 @@ body.running[data-mode="focus"] .pip.next { animation: breathe 7s ease-in-out in
 /* Deep focus: while a pomodoro runs, only the timer and the task you picked stay bright */
 body.deep .chrome { opacity: .2; }
 body.deep .task:not(.active) { opacity: .18; }
-body.deep .quad:not(:has(.task.active)) { opacity: .14; }
+body.deep .quad:not(:has(.task.active)), body.deep .lgroup:not(:has(.task.active)) { opacity: .14; }
+body.deep .cal-grid { opacity: .3; }
+body.deep .lgroup:hover, body.deep .cal-grid:hover { opacity: 1; }
 body.deep .progress { opacity: .55; }
 body.deep .quad:hover, body.deep .quad:hover .task, body.deep .quick:focus-within, body.deep .chrome:hover { opacity: 1; }
 
@@ -352,6 +413,7 @@ dialog::backdrop { background: var(--scrim); }
   .quad { min-height: 0; }
   .quad[data-q="3"] { max-height: 30vh; }
   .tasks { flex: 1; min-height: 0; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--line-strong) transparent; }
+  .listview, .calview { flex: 1; min-height: 0; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--line-strong) transparent; }
 }
 @media (max-width: 680px) {
   .matrix { grid-template-columns: 1fr; }
@@ -362,6 +424,15 @@ dialog::backdrop { background: var(--scrim); }
   .skip { left: auto; right: 0; }
   .slider { grid-template-columns: 84px 1fr 54px; }
   .summary { margin-left: 0; }
+  /* calendar cells are too narrow for names on phones, so tasks become dots */
+  .cal-wd { padding: 0 0 6px; text-align: center; }
+  .cal-day { min-height: 52px; padding: 4px 2px; align-items: center; }
+  .cal-date { align-self: center; }
+  .cal-items { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 3px; }
+  .cal-item { font-size: 0; width: 5px; height: 5px; border-radius: 50%; background: var(--muted); }
+  .cal-item[data-q="1"], .cal-item.active { background: var(--accent); }
+  .cal-item.late { background: var(--danger); }
+  .cal-more { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before { transition: none !important; animation: none !important; }
@@ -458,10 +529,17 @@ dialog::backdrop { background: var(--scrim); }
         <button type="button" id="helpDone">Got it</button>
       </div>
     </div>
-    <div class="matrix" id="matrix">
+    <div class="views chrome" role="tablist" aria-label="Task view">
+      <button type="button" role="tab" data-view="matrix" aria-controls="matrix">Matrix</button>
+      <button type="button" role="tab" data-view="list" aria-controls="listView">List</button>
+      <button type="button" role="tab" data-view="calendar" aria-controls="calView">Calendar</button>
+    </div>
+    <div class="matrix" id="matrix" role="tabpanel">
       <span class="axis chrome">urgent</span>
       <span class="axis chrome">not urgent</span>
     </div>
+    <div class="listview" id="listView" role="tabpanel" hidden></div>
+    <div class="calview" id="calView" role="tabpanel" hidden></div>
     <section class="progress" aria-label="Your progress">
       <div class="today">
         <div class="today-top"><span class="today-n" id="todayN">0</span><span class="today-label" id="todayLabel">pomodoros today</span></div>
@@ -492,7 +570,14 @@ dialog::backdrop { background: var(--scrim); }
     <label class="toggle" for="setAutoFocus">Start pomodoros automatically <input type="checkbox" id="setAutoFocus"></label>
     <label class="toggle" for="setChime">Sound effects (end chime, check-off click) <input type="checkbox" id="setChime"></label>
     <h4>Shortcuts</h4>
-    <p class="keys"><kbd>Space</kbd> start or pause · <kbd>S</kbd> skip · <kbd>B</kbd> beats on or off</p>
+    <p class="keys"><kbd>Space</kbd> start or pause · <kbd>S</kbd> skip · <kbd>B</kbd> beats on or off · <kbd>V</kbd> next view</p>
+    <h4>Export tasks</h4>
+    <div class="exports">
+      <button type="button" class="mini" id="exportIcs">Calendar file (.ics)</button>
+      <button type="button" class="mini" id="exportCsv">Spreadsheet (.csv)</button>
+      <button type="button" class="mini" id="copyMd">Copy as Markdown</button>
+    </div>
+    <p class="hint">Due dates become all-day events in Google or Apple Calendar. Notion imports the CSV as a database, and the Markdown pastes into any page as a checklist.</p>
     <h4>Data</h4>
     <label class="toggle" for="resetCount">Restart the long-break cycle <button type="button" class="mini" id="resetCount">Restart</button></label>
     <div class="dlg-foot">
@@ -564,6 +649,11 @@ dialog::backdrop { background: var(--scrim); }
   const doneOpen = new Set();
   let elimOpen = store.get("elimOpen", false);
   let helpSeen = store.get("helpSeen", false), helpOpen = !helpSeen;
+  const VIEWS = { matrix: "Eisenhower matrix", list: "All tasks", calendar: "Calendar" };
+  let view = store.get("view", "matrix");
+  if (!VIEWS[view]) view = "matrix";
+  const thisMonth = () => { const n = new Date(); return new Date(n.getFullYear(), n.getMonth(), 1); };
+  let calMonth = thisMonth(), calSel = ymd(new Date());
 
   // Finished focus sessions per local day: { "2026-11-02": { n: 4, min: 100 } }
   const dayKey = d => d.toLocaleDateString("en-CA");
@@ -931,9 +1021,11 @@ dialog::backdrop { background: var(--scrim); }
     return b;
   }
 
-  function taskItem(t) {
+  // opts.quad: name the task's quadrant, for views that mix quadrants together
+  function taskItem(t, opts = {}) {
     const li = document.createElement("li");
     li.className = "task" + (t.id === activeId ? " active" : "") + (t.completed ? " done" : "");
+    li.dataset.q = t.q;
     li.draggable = true;
     li.addEventListener("dragstart", e => { e.dataTransfer.setData("text/plain", t.id); e.dataTransfer.effectAllowed = "move"; });
     const row = document.createElement("div"); row.className = "task-row";
@@ -980,8 +1072,13 @@ dialog::backdrop { background: var(--scrim); }
     const main = document.createElement("div"); main.className = "task-main";
     main.append(name);
     const steps = t.steps || [];
-    if (t.due || steps.length) {
+    if (t.due || steps.length || opts.quad) {
       const meta = document.createElement("span"); meta.className = "meta";
+      if (opts.quad) {
+        const qt = document.createElement("span");
+        qt.className = "qtag"; qt.dataset.q = t.q; qt.textContent = QUADS[t.q - 1].name;
+        meta.append(qt);
+      }
       if (t.due) {
         const info = dueInfo(t.due);
         const due = document.createElement("span");
@@ -1098,6 +1195,180 @@ dialog::backdrop { background: var(--scrim); }
   }
 
   function renderTasks() {
+    document.querySelectorAll(".views button").forEach(b => b.setAttribute("aria-selected", b.dataset.view === view));
+    $("#matrixTitle").textContent = VIEWS[view];
+    $("#matrix").hidden = view !== "matrix";
+    $("#listView").hidden = view !== "list";
+    $("#calView").hidden = view !== "calendar";
+    if (view === "list") renderList();
+    else if (view === "calendar") renderCalendar();
+    else renderMatrix();
+    justFilled = null;
+    if (focusStepFor) {
+      // keep typing steps after Enter
+      document.querySelector(`.step-add input[data-for="${focusStepFor}"]`)?.focus();
+      focusStepFor = null;
+    }
+    renderHelp();
+    renderSummary();
+  }
+  function setView(v) {
+    view = v; store.set("view", v); openTools = null; renderTasks();
+  }
+  document.querySelectorAll(".views button").forEach(b => b.addEventListener("click", () => setView(b.dataset.view)));
+
+  // A collapsible "Done · 3" list, remembering whether it was open
+  function doneBox(key, label, list, quad = true) {
+    const li = document.createElement("li");
+    const box = document.createElement("details"); box.className = "donebox";
+    box.open = doneOpen.has(key);
+    box.addEventListener("toggle", () => { box.open ? doneOpen.add(key) : doneOpen.delete(key); });
+    const sum = document.createElement("summary"); sum.textContent = `${label} · ${list.length}`;
+    const inner = document.createElement("ul"); inner.className = "tasks";
+    list.forEach(t => inner.append(taskItem(t, { quad })));
+    box.append(sum, inner); li.append(box);
+    return { li, inner };
+  }
+  const emptyLi = text => { const p = document.createElement("li"); p.className = "empty"; p.textContent = text; return p; };
+  const byDue = (a, b) => (a.due || "9999").localeCompare(b.due || "9999") || a.q - b.q;
+
+  // ---------- List view: everything open, grouped by when it's due ----------
+  const LIST_GROUPS = [["late", "Overdue"], ["today", "Today"], ["tomorrow", "Tomorrow"], ["week", "Next 7 days"], ["later", "Later"], ["none", "No date"]];
+  const groupOf = t => {
+    if (!t.due) return "none";
+    const d = daysUntil(t.due);
+    return d < 0 ? "late" : d === 0 ? "today" : d === 1 ? "tomorrow" : d < 7 ? "week" : "later";
+  };
+  function renderList() {
+    const box = $("#listView");
+    box.innerHTML = "";
+    const open = tasks.filter(t => !t.completed).sort(byDue), done = tasks.filter(t => t.completed);
+    LIST_GROUPS.forEach(([id, name]) => {
+      const list = open.filter(t => groupOf(t) === id);
+      if (!list.length) return;
+      const sec = document.createElement("section"); sec.className = "lgroup"; sec.dataset.g = id;
+      const h = document.createElement("h3"); h.className = "lgroup-head";
+      const n = document.createElement("span"); n.textContent = list.length;
+      h.append(name, n);
+      const ul = document.createElement("ul"); ul.className = "tasks";
+      list.forEach(t => ul.append(taskItem(t, { quad: true })));
+      sec.append(h, ul);
+      box.append(sec);
+    });
+    if (!open.length || done.length) {
+      const ul = document.createElement("ul"); ul.className = "tasks";
+      if (!open.length) ul.append(emptyLi(done.length ? "Everything is done." : "No tasks yet. Add one above."));
+      if (done.length) ul.append(doneBox("list", "Done", done).li);
+      box.append(ul);
+    }
+  }
+
+  // ---------- Calendar view: a month of deadlines; drag a task onto a day to date it ----------
+  function dropDate(el, key) {
+    el.addEventListener("dragover", e => { e.preventDefault(); el.classList.add("drop"); });
+    el.addEventListener("dragleave", e => { if (!el.contains(e.relatedTarget)) el.classList.remove("drop"); });
+    el.addEventListener("drop", e => {
+      e.preventDefault(); el.classList.remove("drop");
+      const t = tasks.find(t => t.id === e.dataTransfer.getData("text/plain"));
+      if (t && t.due !== key) { t.due = key; calSel = key; saveTasks(); renderTasks(); }
+    });
+  }
+  function renderCalendar() {
+    const box = $("#calView"), todayKey = ymd(new Date());
+    box.innerHTML = "";
+    const longDate = d => d.toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" });
+
+    const head = document.createElement("div"); head.className = "cal-head";
+    const title = document.createElement("h3"); title.className = "cal-title";
+    title.textContent = calMonth.toLocaleDateString(undefined, { month: "long", year: "numeric" });
+    const nav = (label, aria, cls, fn) => {
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "cal-nav" + cls; b.textContent = label; b.setAttribute("aria-label", aria);
+      b.addEventListener("click", fn);
+      return b;
+    };
+    const shift = n => () => { calMonth = new Date(calMonth.getFullYear(), calMonth.getMonth() + n, 1); renderTasks(); };
+    head.append(title, nav("‹", "Previous month", " arrow", shift(-1)));
+    if (+calMonth !== +thisMonth() || calSel !== todayKey)
+      head.append(nav("Today", "Go to today", "", () => { calMonth = thisMonth(); calSel = todayKey; renderTasks(); }));
+    head.append(nav("›", "Next month", " arrow", shift(1)));
+
+    const byDay = {};
+    tasks.forEach(t => { if (t.due && !t.completed) (byDay[t.due] ||= []).push(t); });
+    Object.values(byDay).forEach(l => l.sort((a, b) => a.q - b.q));
+
+    const grid = document.createElement("div"); grid.className = "cal-grid";
+    for (let i = 0; i < 7; i++) {
+      const wd = document.createElement("span"); wd.className = "cal-wd"; wd.setAttribute("aria-hidden", "true");
+      wd.textContent = new Date(2023, 0, 1 + i).toLocaleDateString(undefined, { weekday: "short" }); // Jan 1 2023 was a Sunday
+      grid.append(wd);
+    }
+    const last = new Date(calMonth.getFullYear(), calMonth.getMonth() + 1, 0);
+    const end = addDays(last, 6 - last.getDay());
+    for (let d = addDays(calMonth, -calMonth.getDay()); d <= end; d = addDays(d, 1)) {
+      const key = ymd(d), list = byDay[key] || [];
+      const cell = document.createElement("div");
+      cell.className = "cal-day" + (d.getMonth() !== calMonth.getMonth() ? " out" : "")
+        + (key === todayKey ? " today" : "") + (key === calSel ? " sel" : "");
+      const num = document.createElement("button");
+      num.type = "button"; num.className = "cal-date"; num.textContent = d.getDate();
+      num.setAttribute("aria-label", longDate(d) + (list.length ? `, ${list.length} due` : ""));
+      num.setAttribute("aria-pressed", key === calSel);
+      const items = document.createElement("div"); items.className = "cal-items"; items.setAttribute("aria-hidden", "true");
+      const shown = list.length > 3 ? 2 : 3;
+      list.slice(0, shown).forEach(t => {
+        const it = document.createElement("span");
+        it.className = "cal-item" + (key < todayKey ? " late" : "") + (t.id === activeId ? " active" : "");
+        it.dataset.q = t.q; it.textContent = it.title = t.text; it.draggable = true;
+        it.addEventListener("dragstart", e => { e.dataTransfer.setData("text/plain", t.id); e.dataTransfer.effectAllowed = "move"; });
+        items.append(it);
+      });
+      if (list.length > shown) {
+        const more = document.createElement("span"); more.className = "cal-more"; more.textContent = `+${list.length - shown} more`;
+        items.append(more);
+      }
+      cell.append(num, items);
+      cell.addEventListener("click", () => { calSel = key; renderTasks(); });
+      dropDate(cell, key);
+      grid.append(cell);
+    }
+
+    // the picked day's tasks, then everything without a date
+    const panel = document.createElement("section"); panel.className = "cal-panel";
+    const ph = document.createElement("div"); ph.className = "cal-panel-head";
+    const h = document.createElement("h3"); h.textContent = calSel === todayKey ? "Today" : longDate(parseYmd(calSel));
+    const add = document.createElement("button");
+    add.type = "button"; add.className = "cal-add"; add.textContent = "+";
+    add.setAttribute("aria-label", "Add a task due " + longDate(parseYmd(calSel)));
+    add.addEventListener("click", () => {
+      const inp = $("#quickInput"), rest = parseDue(inp.value).s.trim();
+      inp.value = rest ? `${rest} @${calSel}` : `@${calSel} `;
+      inp.focus(); inp.setSelectionRange(rest ? 0 : inp.value.length, rest ? 0 : inp.value.length);
+      updateQuick();
+    });
+    ph.append(h, add);
+    const ul = document.createElement("ul"); ul.className = "tasks";
+    const dayOpen = byDay[calSel] || [], dayDone = tasks.filter(t => t.completed && t.due === calSel);
+    if (!dayOpen.length) ul.append(emptyLi(dayDone.length ? "All done for this day." : "Nothing due."));
+    dayOpen.forEach(t => ul.append(taskItem(t, { quad: true })));
+    dayDone.forEach(t => ul.append(taskItem(t, { quad: true })));
+    panel.append(ph, ul);
+
+    const undated = tasks.filter(t => !t.due && !t.completed).sort(byDue);
+    if (undated.length) {
+      const tray = document.createElement("ul"); tray.className = "tasks";
+      const { li, inner } = doneBox("undated", "No date", undated);
+      const hint = document.createElement("li"); hint.className = "cal-hint";
+      hint.textContent = "Drag a task onto a day, or use ⋯ to give it a date.";
+      inner.prepend(hint);
+      tray.append(li);
+      panel.append(tray);
+    }
+    box.append(head, grid, panel);
+  }
+
+  // ---------- Matrix view ----------
+  function renderMatrix() {
     QUADS.forEach(Q => {
       const sec = quadEls[Q.q], ul = sec.querySelector(".tasks");
       const list = tasks.filter(t => t.q === Q.q);
@@ -1112,36 +1383,83 @@ dialog::backdrop { background: var(--scrim); }
         sec.classList.toggle("expanded", elimOpen);
         ul.hidden = !elimOpen;
       }
-      if (!open.length) {
-        const p = document.createElement("li"); p.className = "empty";
-        if (Q.q === 4) p.textContent = "Nothing here. Good.";
-        else if (done.length) p.textContent = Q.q === 1 ? "Do is clear. Pull something from Schedule?" : `${Q.name} is clear.`;
-        else p.textContent = "No tasks yet. Press + to add one.";
-        ul.append(p);
-      }
+      if (!open.length) ul.append(emptyLi(Q.q === 4 ? "Nothing here. Good."
+        : done.length ? (Q.q === 1 ? "Do is clear. Pull something from Schedule?" : `${Q.name} is clear.`)
+        : "No tasks yet. Press + to add one."));
       // soonest deadline first; undated tasks keep their order at the end
       open.sort((a, b) => (a.due || "9999").localeCompare(b.due || "9999"));
       open.forEach(t => ul.append(taskItem(t)));
-      if (done.length) {
-        const li = document.createElement("li");
-        const box = document.createElement("details"); box.className = "donebox";
-        box.open = doneOpen.has(Q.q);
-        box.addEventListener("toggle", () => { box.open ? doneOpen.add(Q.q) : doneOpen.delete(Q.q); });
-        const sum = document.createElement("summary"); sum.textContent = `Done · ${done.length}`;
-        const inner = document.createElement("ul"); inner.className = "tasks";
-        done.forEach(t => inner.append(taskItem(t)));
-        box.append(sum, inner); li.append(box); ul.append(li);
-      }
+      if (done.length) ul.append(doneBox(Q.q, "Done", done, false).li);
     });
-    justFilled = null;
-    if (focusStepFor) {
-      // keep typing steps after Enter
-      document.querySelector(`.step-add input[data-for="${focusStepFor}"]`)?.focus();
-      focusStepFor = null;
-    }
-    renderHelp();
-    renderSummary();
   }
+
+  // ---------- Export: a calendar file, a CSV for Notion or spreadsheets, or a Markdown checklist ----------
+  function download(name, type, text) {
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([text], { type }));
+    a.download = name;
+    document.body.append(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  }
+  const stepLines = t => (t.steps || []).map(s => (s.done ? "[x] " : "[ ] ") + s.text);
+  function toIcs() {
+    const esc = s => s.replace(/[\\;,]/g, m => "\\" + m).replace(/\r?\n/g, "\\n");
+    const fold = l => l.match(/.{1,73}/g).join("\r\n "); // RFC 5545 keeps lines short
+    const stamp = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d+/, "");
+    const compact = s => s.replace(/-/g, "");
+    const lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Quadrant Focus//EN", "CALSCALE:GREGORIAN", "X-WR-CALNAME:Quadrant Focus"];
+    tasks.filter(t => t.due && !t.completed).sort(byDue).forEach(t => {
+      const desc = [`${QUADS[t.q - 1].name} · ${t.done} of ${t.est} pomodoros`, ...stepLines(t)].join("\n");
+      lines.push("BEGIN:VEVENT", `UID:${t.id}@quadrant-focus`, `DTSTAMP:${stamp}`,
+        `DTSTART;VALUE=DATE:${compact(t.due)}`, `DTEND;VALUE=DATE:${compact(ymd(addDays(parseYmd(t.due), 1)))}`,
+        `SUMMARY:${esc(t.text)}`, `DESCRIPTION:${esc(desc)}`, "TRANSP:TRANSPARENT", "END:VEVENT");
+    });
+    lines.push("END:VCALENDAR");
+    return lines.map(fold).join("\r\n") + "\r\n";
+  }
+  function toCsv() {
+    const cell = v => `"${String(v ?? "").replace(/"/g, '""')}"`;
+    const rows = [["Name", "Quadrant", "Due", "Status", "Estimate", "Pomodoros done", "Steps"]];
+    [...tasks].sort((a, b) => a.q - b.q || byDue(a, b)).forEach(t => rows.push([
+      t.text, QUADS[t.q - 1].name, t.due || "", t.completed ? "Done" : "Not started", t.est, t.done, stepLines(t).join("; ")
+    ]));
+    return rows.map(r => r.map(cell).join(",")).join("\r\n") + "\r\n";
+  }
+  function toMarkdown() {
+    const out = [];
+    QUADS.forEach(Q => {
+      const list = tasks.filter(t => t.q === Q.q).sort((a, b) => a.completed - b.completed || byDue(a, b));
+      if (!list.length) return;
+      out.push(`## ${Q.name}`, "");
+      list.forEach(t => {
+        const due = t.due ? ` (due ${parseYmd(t.due).toLocaleDateString(undefined, { month: "short", day: "numeric" })})` : "";
+        out.push(`- [${t.completed ? "x" : " "}] ${t.text}${due}`);
+        stepLines(t).forEach(s => out.push(`  - ${s}`));
+      });
+      out.push("");
+    });
+    return out.join("\n").trim() + "\n";
+  }
+  const flash = (btn, text) => {
+    const was = btn.dataset.label || (btn.dataset.label = btn.textContent);
+    btn.textContent = text;
+    clearTimeout(btn._t); btn._t = setTimeout(() => { btn.textContent = was; }, 1800);
+  };
+  $("#exportIcs").addEventListener("click", e => {
+    const n = tasks.filter(t => t.due && !t.completed).length;
+    if (!n) return flash(e.currentTarget, "No due dates yet");
+    download("quadrant-focus.ics", "text/calendar", toIcs());
+    flash(e.currentTarget, `Saved ${n} ${n === 1 ? "date" : "dates"}`);
+  });
+  $("#exportCsv").addEventListener("click", e => {
+    download("quadrant-focus.csv", "text/csv", toCsv());
+    flash(e.currentTarget, `Saved ${tasks.length} ${tasks.length === 1 ? "task" : "tasks"}`);
+  });
+  $("#copyMd").addEventListener("click", async e => {
+    const btn = e.currentTarget;
+    try { await navigator.clipboard.writeText(toMarkdown()); flash(btn, "Copied"); }
+    catch { flash(btn, "Couldn't copy"); }
+  });
 
   // ---------- Quick add ----------
   // "!" marks urgent, "*" marks important, "-" sends to Eliminate, "~3" at the end sets the estimate.
@@ -1292,6 +1610,7 @@ dialog::backdrop { background: var(--scrim); }
     if (e.code === "Space") { e.preventDefault(); timer.running ? pause() : start(); }
     else if (e.key === "s" && timer.running) finish(true);
     else if (e.key === "b") toggleSound();
+    else if (e.key === "v") { const ids = Object.keys(VIEWS); setView(ids[(ids.indexOf(view) + 1) % ids.length]); }
   });
 
   document.body.dataset.mode = timer.mode;

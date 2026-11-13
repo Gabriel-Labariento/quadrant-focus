@@ -42,6 +42,24 @@ Add a date anywhere in the task with `@`: `@today`, `@tomorrow`, `@fri`, `@nov12
 
 Tasks sort by deadline within each quadrant. A date due today or tomorrow is tinted, and an overdue one turns red. When something in Schedule is due within a day, it offers to move to Do. In the Eisenhower matrix, a close deadline is what turns important work into urgent work, so I wanted the app to say so.
 
+## Other views
+
+The matrix is good for deciding what matters, but sometimes you just want to see everything at once. Above the tasks, you can switch between three views. Press `V` to cycle through them.
+
+- **Matrix** is the Eisenhower matrix described above.
+- **List** puts every open task in one column, grouped by when it is due: overdue, today, tomorrow, the next seven days, later, and no date. A small label under each task tells you which quadrant it belongs to.
+- **Calendar** shows a month of deadlines. Click a day to see its tasks underneath, or press + there to add a task due that day. Tasks without a date sit in a tray below, and you can drag any task onto a day to give it that date. On a phone, tasks show up as dots.
+
+## Exporting to your calendar or Notion
+
+Settings has three ways to get your tasks out of the app:
+
+- **Calendar file (.ics)** turns every open task with a due date into an all-day event. Import it into Google Calendar (Settings, then Import & export) or open it with Apple Calendar.
+- **Spreadsheet (.csv)** has one row per task, with its quadrant, due date, status, estimate and steps. Notion can import it as a database, and so can any spreadsheet app.
+- **Copy as Markdown** copies a checklist grouped by quadrant. Paste it into a Notion page, and it turns into to-do blocks.
+
+These are one-time exports, not a live sync. The app has no server, so it cannot keep your calendar or Notion up to date on its own.
+
 ## Binaural beats
 
 The player sends a slightly different tone to each ear. Your brain hears the difference as a slow pulse: 10 Hz for alpha, 18 Hz for beta, and so on. You need headphones for this to work. On speakers, it is just a hum. Under Tune, you can pick a preset, adjust the tones, add pink or brown noise, and have the beats play only while a pomodoro is running.
@@ -54,7 +72,7 @@ There is no account and no server. Tasks, settings, and your pomodoro history ar
 
 ## Keyboard shortcuts
 
-`Space` starts or pauses the timer, `S` skips to the next session, and `B` turns the beats on or off.
+`Space` starts or pauses the timer, `S` skips to the next session, `B` turns the beats on or off, and `V` switches to the next view.
 
 ## Running it yourself
 
