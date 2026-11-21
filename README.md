@@ -1,22 +1,28 @@
 # Quadrant Focus
 
-A pomodoro timer, an Eisenhower matrix, and binaural beats on one quiet page.
+A pomodoro timer, an Eisenhower matrix, and binaural beats on one page, with a small tomato named Pom to keep you company.
 
 Use it at [quadrant-focus.vercel.app](https://quadrant-focus.vercel.app).
 
-![Quadrant Focus, with a ring timer on the left, the matrix drawn as two crossing lines on the right, and a strip of daily and weekly progress underneath](docs/screenshot.jpg)
+![Quadrant Focus, with Pom the tomato and the timer on the left, four colored quadrant cards on the right, and a daily goal and week chart underneath](docs/screenshot.jpg)
 
-I wanted three things in one place: the simple timer of [Pomofocus](https://pomofocus.io), an Eisenhower matrix for deciding what deserves my pomodoros in the first place, and binaural beats for when I need help settling in. Most tools give you one of these. Quadrant Focus puts them on a single page and then tries hard to stay out of the way.
+I wanted three things in one place: the simple timer of [Pomofocus](https://pomofocus.io), an Eisenhower matrix for deciding what deserves my pomodoros in the first place, and binaural beats for when I need help settling in. Most tools give you one of these. Quadrant Focus puts them on a single page, and Pom makes the long study sessions feel a little less lonely.
 
 ## How it works
 
 You sort tasks into four quadrants. Do is urgent and important. Schedule is important but not urgent. Delegate is urgent but not important. Eliminate is neither, so it stays folded into a thin strip at the bottom.
 
-Click a task to focus on it, then press Start. Each finished pomodoro fills one of that task's dots, so you can see how your estimate compares with what the work took. When a session ends, a short card tells you what you just spent 25 minutes on before the break begins. While a pomodoro runs, everything except the timer and the task you picked fades back.
-
-Under the matrix, a small strip counts the pomodoros you finish: today, grouped by your long-break cycle, and across the last seven days. It is a good feeling to see how much work you have done, so I wanted that in plain view.
+Click a task to focus on it, then press Start. Each finished pomodoro fills one of that task's dots, so you can see how your estimate compares with what the work took. While a pomodoro runs, everything except Pom, the timer and the task you picked fades back. Breaks turn the page sky blue and suggest something small to do, like refilling your water.
 
 The timer follows the usual rhythm: 25 minutes of focus, a 5-minute break, and a 15-minute break after every fourth pomodoro. You can change all of these in Settings.
+
+## Pom, XP and streaks
+
+Pom is a little tomato who sits beside the timer and reacts to what you do. It waves while it waits, puts on a headband while you focus, cheers when you finish something, and wears sunglasses on breaks. It gets worried when a task is overdue or your streak is about to end, sleepy after 11 PM, and a little sheepish if you pause early. That last one is a shrug, not a guilt trip.
+
+Finishing things earns XP. A minute of focus is worth 1 XP, so a full pomodoro is 25. A task is worth 10 in Do, 15 in Schedule, and 5 in Delegate or Eliminate, and each step is worth 2. Schedule pays more on purpose: the point of the Eisenhower matrix is to get to important work before it turns urgent, so the game should reward that. Untick something and its XP goes back.
+
+XP adds up to levels, and the header shows your streak, which is the number of days in a row with at least one pomodoro. Under the timer, a row of tomatoes tracks your daily goal, six pomodoros by default. When a pomodoro ends, Pom celebrates with your XP, your goal and your streak, then reminds you of the next step for after your break. Below the tasks, a small chart shows the last seven days. It is a good feeling to see how much work you have done, so I wanted that in plain view.
 
 ## Adding tasks
 
@@ -34,7 +40,7 @@ End a task with `~3` to estimate three pomodoros. You can also drag tasks betwee
 
 ## Steps
 
-Big tasks are easier to start when they are broken into small pieces. When you focus a task, its checklist unfolds right under it, and you can keep adding steps by pressing Enter. The timer ring then shows the next step, like "Outline section 3.2", with the task name and "Step 2 of 5" underneath. Other tasks show a quiet count such as "1/5 steps". Once every step is ticked off, the app asks if the task itself is done.
+Big tasks are easier to start when they are broken into small pieces. When you focus a task, its checklist unfolds right under it, and you can keep adding steps by pressing Enter. The timer then shows the next step, like "Outline section 3.2", with "Step 2 of 5" and the task name underneath. Other tasks show a quiet count such as "1/5 steps". Once every step is ticked off, the app asks if the task itself is done.
 
 ## Due dates
 
@@ -68,7 +74,7 @@ Frankly, the research on whether binaural beats help focus is mixed. I treat the
 
 ## Your data stays in your browser
 
-There is no account and no server. Tasks, settings, and your pomodoro history are saved in your browser's local storage, so they stay on one device and in one browser. Clearing your site data, or opening the page in a private window, starts you from scratch.
+There is no account and no server. Tasks, settings, XP, and your pomodoro history are saved in your browser's local storage, so they stay on one device and in one browser. Clearing your site data, or opening the page in a private window, starts you from scratch.
 
 ## Keyboard shortcuts
 
@@ -88,7 +94,7 @@ The source lives in `src/app.html`. After editing it, run `python3 build.py`, wh
 
 ## Contributing
 
-Issues and pull requests are welcome. I only ask that changes keep the page quiet. Most of the recent work on this went into taking things out rather than adding them, and I would like to keep it that way.
+Issues and pull requests are welcome. I only ask that changes keep two things true: the page stays simple, and Pom encourages you without ever nagging.
 
 ## License
 
