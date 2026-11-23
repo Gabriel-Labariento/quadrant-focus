@@ -109,10 +109,10 @@ header { display: flex; align-items: center; justify-content: space-between; gap
 
 /* Pom and the speech bubble */
 .pom-row { display: flex; align-items: flex-end; gap: 4px; }
-.pom { flex: none; width: 168px; line-height: 0; }
+.pom { flex: none; width: 190px; line-height: 0; }
 .pom svg { width: 100%; height: auto; overflow: visible; }
 .bubble {
-  position: relative; flex: 1; min-width: 0; margin-bottom: 84px; background: #ffffff; border: 2px solid var(--line);
+  position: relative; flex: 1; min-width: 0; margin-bottom: 92px; background: #ffffff; border: 2px solid var(--line);
   border-radius: 18px; padding: 11px 13px; font-weight: 700; font-size: 14.5px; line-height: 1.35; text-wrap: pretty;
 }
 .bubble::after {
@@ -137,6 +137,34 @@ header { display: flex; align-items: center; justify-content: space-between; gap
 .pom-wave { animation: pomwave 1.4s ease-in-out infinite; transform-box: fill-box; transform-origin: 0% 100%; }
 .pom-z { animation: pomz 2.6s ease-out infinite; }
 .pom-z2 { animation-delay: 1.3s; }
+
+/* Pom evolves: level picks the stage, streak lights the aura, gear is worn by choice */
+.pom .st-pot, .pom .st-seed, .pom .st-sprout, .pom .st-blossom, .pom .gear, .pom .pfc { display: none; }
+.pom[data-stage="seed"] .st-pot, .pom[data-stage="sprout"] .st-pot, .pom[data-stage="blossom"] .st-pot,
+.pom[data-stage="seed"] .st-seed, .pom[data-stage="sprout"] .st-sprout, .pom[data-stage="blossom"] .st-blossom { display: inline; }
+.pom[data-stage="seed"] .pom-tomato, .pom[data-stage="sprout"] .pom-tomato, .pom[data-stage="blossom"] .pom-tomato,
+.pom[data-stage="seed"] .tomato-shadow, .pom[data-stage="sprout"] .tomato-shadow, .pom[data-stage="blossom"] .tomato-shadow { display: none; }
+.pom[data-mood="focus"] .pfa, .pom[data-mood="chill"] .pfa, .pom[data-mood="sleepy"] .pfa { display: none; }
+.pom[data-mood="focus"] .pfc, .pom[data-mood="chill"] .pfc, .pom[data-mood="sleepy"] .pfc { display: inline; }
+.pom.wear-glasses .g-glasses, .pom.wear-scarf .g-scarf, .pom.wear-headphones .g-headphones,
+.pom.wear-cap .g-cap, .pom.wear-medal .g-medal, .pom.wear-cape .g-cape { display: inline; }
+.pom-tomato { transform-origin: 85px 158px; }
+.pom[data-stage="green"] .pom-tomato { transform: scale(.86); }
+.pom[data-stage="green"] .pb { fill: #8fd16f; }
+.pom[data-stage="green"] .pft { fill: #6fb455; }
+.pom[data-stage="green"] .pc { fill: #f4b3a2; }
+.pom[data-stage="green"] .pa { stroke: #6fb455; }
+.pom[data-stage="golden"] .pb { fill: #ffc533; stroke: #e0a400; stroke-width: 2.5px; }
+.pom[data-stage="golden"] .pft { fill: #e0a400; }
+.pom[data-stage="golden"] .pc { fill: #ffa36b; }
+.pom[data-stage="golden"] .pa { stroke: #e0a400; }
+.pom[data-stage="golden"] .ph { opacity: .6; }
+.evo-flicker { animation: evoflicker 1.3s ease-in-out infinite; transform-origin: 100px 150px; }
+.evo-spark { animation: evotwinkle 1.8s ease-in-out infinite; }
+.pom.evolve svg { animation: evolve 1.4s cubic-bezier(.3, 1.4, .5, 1) both; }
+.pom-btn { border: 0; background: none; padding: 0; border-radius: 28px; cursor: pointer; }
+.pom-btn svg { transition: transform .2s; }
+.pom-btn:hover svg { transform: translateY(-3px); }
 
 /* Timer */
 .timer { border: 2px solid var(--line); background: #ffffff; border-radius: 24px; padding: 16px 18px 18px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
@@ -177,7 +205,7 @@ body[data-mode="short"] .bar b, body[data-mode="long"] .bar b { background: #4aa
 .confetti { position: absolute; inset: 0; pointer-events: none; }
 .confetti span { position: absolute; top: 0; height: 14px; border-radius: 3px; animation: confetti 3.4s linear infinite; }
 .celebrate { position: relative; width: 100%; max-width: 600px; display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center; }
-.celebrate .pom { width: 190px; }
+.celebrate .pom { width: 230px; }
 .cheer-kicker { margin: 0; font-family: var(--display); font-weight: 700; font-size: clamp(30px, 7vw, 42px); line-height: 1.1; color: var(--green); }
 .cheer-main { margin: 0; font-weight: 700; font-size: 17px; color: var(--muted); max-width: 46ch; }
 .cheer-main em { font-style: normal; color: var(--ink); }
@@ -458,6 +486,30 @@ dialog::backdrop { background: rgba(42, 45, 52, 0.35); }
 @keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 @keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
 @keyframes eq { 0%, 100% { height: 3px; } 50% { height: 12px; } }
+@keyframes evoflicker { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.04, 1.07); } }
+@keyframes evotwinkle { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+@keyframes evolve { 0% { transform: scale(.7); filter: brightness(3) saturate(0); } 55% { transform: scale(1.08); filter: brightness(1.6); } 100% { transform: none; filter: none; } }
+
+/* Pom's closet */
+#closet { width: min(560px, calc(100vw - 32px)); }
+.closet-top { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; }
+.closet .pom { width: 160px; }
+.closet-info { flex: 1; min-width: 220px; display: flex; flex-direction: column; gap: 6px; }
+.closet-line { margin: 0; font-weight: 800; font-size: 13.5px; color: var(--muted); }
+.evo-bar { height: 12px; border-radius: 999px; background: var(--grape-bg); overflow: hidden; }
+.evo-bar b { display: block; height: 100%; width: 0; border-radius: 999px; background: var(--grape); transition: width .6s ease; }
+.closet-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; }
+.closet-chips span { background: var(--field); border-radius: 999px; padding: 3px 12px; font-weight: 800; font-size: 12.5px; }
+.gear-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.gear-card { border: 2px solid var(--line); border-radius: 16px; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px; }
+.gear-card.on { border-color: var(--green); background: var(--mint); }
+.gear-card.locked { background: var(--field); }
+.gear-card b { font-family: var(--display); font-weight: 600; font-size: 16px; }
+.gear-card span { font-weight: 700; font-size: 12.5px; color: var(--muted); }
+.gear-card i { display: block; height: 8px; border-radius: 999px; background: var(--line); overflow: hidden; }
+.gear-card i u { display: block; height: 100%; background: var(--soft); border-radius: 999px; }
+.gear-card button { align-self: flex-start; min-height: 34px; border-radius: 10px; border: 2px solid var(--green); background: var(--green); color: #ffffff; box-shadow: 0 3px 0 var(--green-dark); padding: 0 12px; font-weight: 800; font-size: 12.5px; letter-spacing: .04em; }
+.gear-card.on button { background: #ffffff; color: var(--green-dark); border-color: #cfe9da; box-shadow: 0 3px 0 #cfe9da; }
 
 /* Cockpit on desktop: one screen, quadrants scroll their own lists */
 @media (min-width: 900px) {
@@ -476,8 +528,9 @@ dialog::backdrop { background: rgba(42, 45, 52, 0.35); }
   .stats { gap: 12px; font-size: 16px; }
   .matrix { grid-template-columns: 1fr; }
   .quad[data-q="4"] { align-self: stretch; }
-  .pom { width: 132px; }
-  .bubble { margin-bottom: 64px; font-size: 14px; }
+  .pom { width: 150px; }
+  .bubble { margin-bottom: 70px; font-size: 14px; }
+  .gear-grid { grid-template-columns: 1fr; }
   .slider { grid-template-columns: 84px 1fr 54px; }
   .summary { margin-left: 0; }
   .task-row { grid-template-columns: 26px minmax(0, 1fr) auto auto; }
@@ -525,7 +578,7 @@ dialog::backdrop { background: rgba(42, 45, 52, 0.35); }
   <main class="cockpit">
   <div class="column">
     <div class="pom-row">
-      <div class="pom" id="pom" data-mood="happy"></div>
+      <button type="button" class="pom pom-btn" id="pom" data-mood="happy" title="Open Pom's closet"></button>
       <p class="bubble" id="bubble" aria-live="polite"></p>
     </div>
 
@@ -642,6 +695,25 @@ dialog::backdrop { background: rgba(42, 45, 52, 0.35); }
   </div>
 </div>
 
+<dialog id="closet" aria-labelledby="closetTitle">
+  <div class="dlg closet">
+    <div class="closet-top">
+      <div class="pom" id="closetPom" data-mood="proud"></div>
+      <div class="closet-info">
+        <h3 id="closetTitle">Ripe Pom</h3>
+        <p class="closet-line" id="closetLevel"></p>
+        <div class="evo-bar" aria-hidden="true"><b id="closetBar"></b></div>
+        <p class="closet-line" id="closetNext"></p>
+        <p class="closet-chips"><span id="closetAura"></span><span id="closetEnergy"></span></p>
+      </div>
+    </div>
+    <h4>Gear</h4>
+    <p class="hint" id="closetHint"></p>
+    <div class="gear-grid" id="gearGrid"></div>
+    <div class="dlg-foot"><button type="button" class="btn primary chunky" id="closeCloset">Done</button></div>
+  </div>
+</dialog>
+
 <dialog id="settings">
   <form class="dlg" id="settingsForm" method="dialog">
     <h3>Settings</h3>
@@ -710,7 +782,6 @@ dialog::backdrop { background: rgba(42, 45, 52, 0.35); }
     "Tidy one thing on your desk."
   ];
 
-  // Pom: one drawing, eight moods. CSS shows the group that matches data-mood on the wrapper.
   const POM_LABELS = {
     happy: "Pom the tomato, smiling and waving", focus: "Pom in a headband, eyes closed, focusing",
     cheer: "Pom cheering with arms up", chill: "Pom in sunglasses, relaxing on a break",
@@ -719,71 +790,150 @@ dialog::backdrop { background: rgba(42, 45, 52, 0.35); }
   };
   const ARM = 'stroke="#e0443a" stroke-width="10" stroke-linecap="round" fill="none"';
   const INK = 'fill="none" stroke="#2a2d34" stroke-linecap="round"';
-  const POM_SVG = `<svg viewBox="0 0 170 176" role="img" aria-label="${POM_LABELS.happy}">
-    <ellipse cx="85" cy="166" rx="44" ry="6" fill="rgba(42,45,52,0.08)"/>
-    <g class="pom-body"><g transform="translate(5 4)">
-      <g class="mg m-happy" ${ARM}><path d="M26 106 Q14 118 18 130"/><path class="pom-wave" d="M134 100 Q150 88 148 68"/></g>
-      <g class="mg m-focus" ${ARM}><path d="M28 108 Q38 134 60 132"/><path d="M132 108 Q122 134 100 132"/></g>
-      <g class="mg m-cheer" ${ARM}><path d="M30 104 Q14 82 20 62"/><path d="M130 104 Q146 82 140 62"/></g>
-      <g class="mg m-chill" ${ARM}><path d="M26 106 Q14 118 18 130"/><path d="M134 108 Q150 114 150 126"/></g>
-      <g class="mg m-worried" ${ARM}><path d="M28 100 Q30 120 46 120"/><path d="M132 100 Q130 120 114 120"/></g>
-      <g class="mg m-proud" ${ARM}><path d="M26 92 Q8 108 28 120"/><path d="M134 92 Q152 108 132 120"/></g>
-      <g class="mg m-sleepy" ${ARM}><path d="M26 108 Q16 120 20 132"/><path d="M134 108 Q144 120 140 132"/></g>
-      <g class="mg m-shy" ${ARM}><path d="M26 106 Q14 118 18 130"/><path d="M132 98 Q150 76 128 60"/></g>
-      <ellipse cx="62" cy="150" rx="12" ry="7" fill="#e0443a"/><ellipse cx="98" cy="150" rx="12" ry="7" fill="#e0443a"/>
-      <circle cx="80" cy="96" r="58" fill="#ff5a4e"/>
-      <ellipse cx="56" cy="68" rx="14" ry="8" fill="#ffffff" opacity="0.35" transform="rotate(-30 56 68)"/>
-      <rect x="77" y="18" width="6" height="16" rx="3" fill="#2f9e55"/>
-      <path d="M80 30 L88 44 L104 40 L94 52 L104 62 L88 58 L80 70 L72 58 L56 62 L66 52 L56 40 L72 44 Z" fill="#3fbf6a"/>
-      <circle cx="50" cy="112" r="8" fill="#ff8f87"/><circle cx="110" cy="112" r="8" fill="#ff8f87"/>
-      <g class="mg m-happy">
-        <g class="pom-blink"><ellipse cx="62" cy="94" rx="10" ry="12" fill="#fff"/><ellipse cx="98" cy="94" rx="10" ry="12" fill="#fff"/>
-          <g class="pom-look"><circle cx="64" cy="97" r="5.5" fill="#2a2d34"/><circle cx="100" cy="97" r="5.5" fill="#2a2d34"/><circle cx="66" cy="94" r="1.8" fill="#fff"/><circle cx="102" cy="94" r="1.8" fill="#fff"/></g></g>
-        <path d="M67 115 Q80 128 93 115" ${INK} stroke-width="4"/>
+  // Pom: one drawing. data-stage picks the form (seed in a pot up to a golden tomato), data-mood picks the face,
+  // and wear-* classes show gear. The aura, glow and sparkles are filled in by applyEvo().
+  const EVO = 'transform="translate(-15 -12)"'; // the evolution layers are drawn around (100, 112); Pom's body sits at (85, 100)
+  const POM_SVG = `<svg viewBox="-15 -12 200 214" role="img" aria-label="${POM_LABELS.happy}">
+    <g ${EVO}>
+      <circle class="evo-glow" cx="100" cy="112" r="78" fill="#ffd84d" opacity="0"/>
+      <g class="evo-flicker"><path class="aura-o" d=""/><path class="aura-i" d=""/></g>
+    </g>
+    <ellipse class="tomato-shadow" cx="85" cy="166" rx="44" ry="6" fill="rgba(42,45,52,0.08)"/>
+    <g class="pom-body">
+      <g class="st-pot" ${EVO}>
+        <ellipse cx="100" cy="206" rx="46" ry="5" fill="rgba(42,45,52,0.08)"/>
+        <path d="M64 160 L136 160 L129 204 L71 204 Z" fill="#d9774a"/>
+        <ellipse cx="100" cy="154" rx="40" ry="6" fill="#6b4a2f"/>
+        <g class="st-seed">
+          <path d="M100 132 Q98 124 102 118" stroke="#3fa04f" stroke-width="3" stroke-linecap="round" fill="none"/>
+          <path d="M102 120 Q108 110 118 112 Q111 121 102 120 Z" fill="#6cc35a"/>
+          <ellipse cx="100" cy="146" rx="21" ry="16" fill="#c98b52"/>
+          <ellipse cx="93" cy="139" rx="6" ry="3" fill="#fff" opacity="0.3"/>
+          <g class="pfa"><circle cx="93" cy="145" r="2.6" fill="#2a2d34"/><circle cx="107" cy="145" r="2.6" fill="#2a2d34"/></g>
+          <path class="pfc" d="M90 145 Q93 147.5 96 145 M104 145 Q107 147.5 110 145" ${INK} stroke-width="2.4"/>
+          <path d="M95 151 Q100 155 105 151" ${INK} stroke-width="2.4"/>
+        </g>
+        <g class="st-sprout">
+          <path d="M100 154 Q96 128 100 106" stroke="#3fa04f" stroke-width="6" stroke-linecap="round" fill="none"/>
+          <ellipse cx="84" cy="128" rx="16" ry="7" fill="#6cc35a" transform="rotate(-25 84 128)"/>
+          <ellipse cx="117" cy="119" rx="16" ry="7" fill="#6cc35a" transform="rotate(25 117 119)"/>
+          <circle cx="100" cy="92" r="18" fill="#8ed97a"/>
+          <path d="M100 75 Q104 66 112 68 Q107 76 100 75 Z" fill="#3fa04f"/>
+          <g class="pfa"><circle cx="94" cy="91" r="2.6" fill="#2a2d34"/><circle cx="106" cy="91" r="2.6" fill="#2a2d34"/></g>
+          <path class="pfc" d="M91 91 Q94 93.5 97 91 M103 91 Q106 93.5 109 91" ${INK} stroke-width="2.4"/>
+          <path d="M95 97 Q100 101 105 97" ${INK} stroke-width="2.4"/>
+        </g>
+        <g class="st-blossom">
+          <path d="M100 154 Q93 118 100 84" stroke="#3fa04f" stroke-width="6" stroke-linecap="round" fill="none"/>
+          <ellipse cx="82" cy="132" rx="18" ry="8" fill="#6cc35a" transform="rotate(-25 82 132)"/>
+          <ellipse cx="119" cy="118" rx="18" ry="8" fill="#6cc35a" transform="rotate(25 119 118)"/>
+          <ellipse cx="86" cy="104" rx="13" ry="6" fill="#7fd06c" transform="rotate(-35 86 104)"/>
+          <g fill="#ffd84d">
+            <ellipse cx="100" cy="54" rx="10" ry="16"/><ellipse cx="100" cy="54" rx="10" ry="16" transform="rotate(72 100 70)"/>
+            <ellipse cx="100" cy="54" rx="10" ry="16" transform="rotate(144 100 70)"/><ellipse cx="100" cy="54" rx="10" ry="16" transform="rotate(216 100 70)"/>
+            <ellipse cx="100" cy="54" rx="10" ry="16" transform="rotate(288 100 70)"/>
+          </g>
+          <circle cx="100" cy="70" r="12" fill="#ffb300"/>
+          <g class="pfa"><circle cx="96" cy="68" r="2" fill="#2a2d34"/><circle cx="104" cy="68" r="2" fill="#2a2d34"/></g>
+          <path class="pfc" d="M93.5 68 Q96 70 98.5 68 M101.5 68 Q104 70 106.5 68" ${INK} stroke-width="2"/>
+          <path d="M96 73 Q100 77 104 73" ${INK} stroke-width="2"/>
+        </g>
       </g>
-      <g class="mg m-focus">
-        <path d="M27 76 Q80 54 133 76 L131 87 Q80 66 29 87 Z" fill="#3fbf6a"/><circle cx="136" cy="82" r="5" fill="#2f9e55"/>
-        <path d="M140 80 L152 74 M140 84 L151 90" stroke="#2f9e55" stroke-width="4" stroke-linecap="round"/>
-        <path d="M53 99 Q62 92 71 99 M89 99 Q98 92 107 99 M72 118 Q80 122 88 118" ${INK} stroke-width="4"/>
-        <g transform="rotate(-20 80 134)"><rect x="58" y="130" width="44" height="8" rx="2" fill="#ffc533"/><path d="M102 130 L112 134 L102 138 Z" fill="#f4d7a1"/><rect x="54" y="130" width="6" height="8" rx="2" fill="#ff8f87"/></g>
-      </g>
-      <g class="mg m-cheer">
-        <path d="M53 98 Q62 88 71 98 M89 98 Q98 88 107 98" ${INK} stroke-width="4.5"/>
-        <path d="M64 110 Q80 112 96 110 Q94 130 80 130 Q66 130 64 110 Z" fill="#2a2d34"/>
-        <path d="M71 123 Q80 118 89 123 Q86 129 80 129 Q74 129 71 123 Z" fill="#ff8f87"/>
-        <path d="M8 34 L11 42 L19 45 L11 48 L8 56 L5 48 L-3 45 L5 42 Z M150 20 L152 26 L158 28 L152 30 L150 36 L148 30 L142 28 L148 26 Z" fill="#ffc533"/>
-        <circle cx="146" cy="50" r="3" fill="#4aa8ff"/><circle cx="20" cy="18" r="2.5" fill="#3fbf6a"/>
-      </g>
-      <g class="mg m-chill">
-        <path d="M46 88 H76 Q76 104 62 104 Q48 104 46 88 Z M84 88 H114 Q112 104 98 104 Q86 104 84 88 Z" fill="#2a2d34"/>
-        <path d="M40 89 H120" stroke="#2a2d34" stroke-width="4" stroke-linecap="round"/>
-        <path d="M68 118 Q82 126 94 114" ${INK} stroke-width="4"/>
-        <rect x="140" y="116" width="18" height="24" rx="5" fill="#9fd3ff"/><path d="M152 116 L158 100" stroke="#3fbf6a" stroke-width="3" stroke-linecap="round"/>
-      </g>
-      <g class="mg m-worried">
-        <g class="pom-blink"><ellipse cx="62" cy="97" rx="9" ry="11" fill="#fff"/><ellipse cx="98" cy="97" rx="9" ry="11" fill="#fff"/><circle cx="62" cy="99" r="5" fill="#2a2d34"/><circle cx="98" cy="99" r="5" fill="#2a2d34"/></g>
-        <path d="M50 86 L70 79 M110 86 L90 79" ${INK} stroke-width="4"/>
-        <path d="M66 124 Q70 118 74 123 Q78 128 82 122 Q86 117 90 123 Q93 127 95 123" ${INK} stroke-width="3.5"/>
-        <path d="M138 56 Q144 66 138 72 Q132 66 138 56 Z" fill="#4aa8ff"/>
-      </g>
-      <g class="mg m-proud">
-        <path d="M56 22 L64 34 L72 18 L80 32 L88 18 L96 34 L104 22 L102 42 L58 42 Z" fill="#ffc533" stroke="#e0a400" stroke-width="2" stroke-linejoin="round"/>
-        <circle cx="80" cy="32" r="3" fill="#ff5a4e"/>
-        <path d="M53 97 Q62 90 71 97 M89 97 Q98 90 107 97 M66 114 Q80 126 94 114" ${INK} stroke-width="4"/>
-      </g>
-      <g class="mg m-sleepy">
-        <path d="M34 62 Q64 6 120 40 Q90 44 50 70 Z" fill="#7d6bd8"/><path d="M34 62 Q80 40 124 52" stroke="#fff" stroke-width="7" stroke-linecap="round" fill="none"/>
-        <circle cx="124" cy="40" r="7" fill="#fff"/>
-        <path d="M53 100 Q62 104 71 100 M89 100 Q98 104 107 100" ${INK} stroke-width="4"/><ellipse cx="80" cy="120" rx="5" ry="4" fill="#2a2d34"/>
-        <g fill="#7d6bd8" font-family="Fredoka, Nunito, sans-serif" font-weight="700"><text class="pom-z" x="136" y="64" font-size="18">z</text><text class="pom-z pom-z2" x="148" y="48" font-size="13">z</text></g>
-      </g>
-      <g class="mg m-shy">
-        <ellipse cx="62" cy="95" rx="10" ry="12" fill="#fff"/><ellipse cx="98" cy="95" rx="10" ry="12" fill="#fff"/>
-        <circle cx="57" cy="99" r="5.5" fill="#2a2d34"/><circle cx="93" cy="99" r="5.5" fill="#2a2d34"/>
-        <path d="M44 110 L48 104 M50 112 L54 106 M106 110 L110 104 M112 112 L116 106" stroke="#e0443a" stroke-width="2.5" stroke-linecap="round"/>
-        <path d="M70 118 Q76 122 80 118 Q84 114 90 118" ${INK} stroke-width="4"/>
-      </g>
-    </g></g>
+      <g class="pom-tomato"><g transform="translate(5 4)">
+        <g class="gear g-cape" transform="translate(-20 -16)">
+          <path d="M58 100 Q26 160 40 200 L160 200 Q174 160 142 100 Z" fill="#9b7bff"/>
+          <path d="M58 100 Q34 158 46 196 L58 196 Q50 160 70 104 Z" fill="#7d5ff0"/>
+        </g>
+        <g class="mg m-happy pa" ${ARM}><path d="M26 106 Q14 118 18 130"/><path class="pom-wave" d="M134 100 Q150 88 148 68"/></g>
+        <g class="mg m-focus pa" ${ARM}><path d="M28 108 Q38 134 60 132"/><path d="M132 108 Q122 134 100 132"/></g>
+        <g class="mg m-cheer pa" ${ARM}><path d="M30 104 Q14 82 20 62"/><path d="M130 104 Q146 82 140 62"/></g>
+        <g class="mg m-chill pa" ${ARM}><path d="M26 106 Q14 118 18 130"/><path d="M134 108 Q150 114 150 126"/></g>
+        <g class="mg m-worried pa" ${ARM}><path d="M28 100 Q30 120 46 120"/><path d="M132 100 Q130 120 114 120"/></g>
+        <g class="mg m-proud pa" ${ARM}><path d="M26 92 Q8 108 28 120"/><path d="M134 92 Q152 108 132 120"/></g>
+        <g class="mg m-sleepy pa" ${ARM}><path d="M26 108 Q16 120 20 132"/><path d="M134 108 Q144 120 140 132"/></g>
+        <g class="mg m-shy pa" ${ARM}><path d="M26 106 Q14 118 18 130"/><path d="M132 98 Q150 76 128 60"/></g>
+        <ellipse class="pft" cx="62" cy="150" rx="12" ry="7" fill="#e0443a"/><ellipse class="pft" cx="98" cy="150" rx="12" ry="7" fill="#e0443a"/>
+        <circle class="pb" cx="80" cy="96" r="58" fill="#ff5a4e"/>
+        <ellipse class="ph" cx="56" cy="68" rx="14" ry="8" fill="#ffffff" opacity="0.35" transform="rotate(-30 56 68)"/>
+        <rect x="77" y="18" width="6" height="16" rx="3" fill="#2f9e55"/>
+        <path d="M80 30 L88 44 L104 40 L94 52 L104 62 L88 58 L80 70 L72 58 L56 62 L66 52 L56 40 L72 44 Z" fill="#3fbf6a"/>
+        <circle class="pc" cx="50" cy="112" r="8" fill="#ff8f87"/><circle class="pc" cx="110" cy="112" r="8" fill="#ff8f87"/>
+        <g class="mg m-happy">
+          <g class="pom-blink"><ellipse cx="62" cy="94" rx="10" ry="12" fill="#fff"/><ellipse cx="98" cy="94" rx="10" ry="12" fill="#fff"/>
+            <g class="pom-look"><circle cx="64" cy="97" r="5.5" fill="#2a2d34"/><circle cx="100" cy="97" r="5.5" fill="#2a2d34"/><circle cx="66" cy="94" r="1.8" fill="#fff"/><circle cx="102" cy="94" r="1.8" fill="#fff"/></g></g>
+          <path d="M67 115 Q80 128 93 115" ${INK} stroke-width="4"/>
+        </g>
+        <g class="mg m-focus">
+          <path d="M27 76 Q80 54 133 76 L131 87 Q80 66 29 87 Z" fill="#3fbf6a"/><circle cx="136" cy="82" r="5" fill="#2f9e55"/>
+          <path d="M140 80 L152 74 M140 84 L151 90" stroke="#2f9e55" stroke-width="4" stroke-linecap="round"/>
+          <path d="M53 99 Q62 92 71 99 M89 99 Q98 92 107 99 M72 118 Q80 122 88 118" ${INK} stroke-width="4"/>
+          <g transform="rotate(-20 80 134)"><rect x="58" y="130" width="44" height="8" rx="2" fill="#ffc533"/><path d="M102 130 L112 134 L102 138 Z" fill="#f4d7a1"/><rect x="54" y="130" width="6" height="8" rx="2" fill="#ff8f87"/></g>
+        </g>
+        <g class="mg m-cheer">
+          <path d="M53 98 Q62 88 71 98 M89 98 Q98 88 107 98" ${INK} stroke-width="4.5"/>
+          <path d="M64 110 Q80 112 96 110 Q94 130 80 130 Q66 130 64 110 Z" fill="#2a2d34"/>
+          <path d="M71 123 Q80 118 89 123 Q86 129 80 129 Q74 129 71 123 Z" fill="#ff8f87"/>
+          <path d="M8 34 L11 42 L19 45 L11 48 L8 56 L5 48 L-3 45 L5 42 Z M150 20 L152 26 L158 28 L152 30 L150 36 L148 30 L142 28 L148 26 Z" fill="#ffc533"/>
+          <circle cx="146" cy="50" r="3" fill="#4aa8ff"/><circle cx="20" cy="18" r="2.5" fill="#3fbf6a"/>
+        </g>
+        <g class="mg m-chill">
+          <path d="M46 88 H76 Q76 104 62 104 Q48 104 46 88 Z M84 88 H114 Q112 104 98 104 Q86 104 84 88 Z" fill="#2a2d34"/>
+          <path d="M40 89 H120" stroke="#2a2d34" stroke-width="4" stroke-linecap="round"/>
+          <path d="M68 118 Q82 126 94 114" ${INK} stroke-width="4"/>
+          <rect x="140" y="116" width="18" height="24" rx="5" fill="#9fd3ff"/><path d="M152 116 L158 100" stroke="#3fbf6a" stroke-width="3" stroke-linecap="round"/>
+        </g>
+        <g class="mg m-worried">
+          <g class="pom-blink"><ellipse cx="62" cy="97" rx="9" ry="11" fill="#fff"/><ellipse cx="98" cy="97" rx="9" ry="11" fill="#fff"/><circle cx="62" cy="99" r="5" fill="#2a2d34"/><circle cx="98" cy="99" r="5" fill="#2a2d34"/></g>
+          <path d="M50 86 L70 79 M110 86 L90 79" ${INK} stroke-width="4"/>
+          <path d="M66 124 Q70 118 74 123 Q78 128 82 122 Q86 117 90 123 Q93 127 95 123" ${INK} stroke-width="3.5"/>
+          <path d="M138 56 Q144 66 138 72 Q132 66 138 56 Z" fill="#4aa8ff"/>
+        </g>
+        <g class="mg m-proud">
+          <path d="M56 22 L64 34 L72 18 L80 32 L88 18 L96 34 L104 22 L102 42 L58 42 Z" fill="#ffc533" stroke="#e0a400" stroke-width="2" stroke-linejoin="round"/>
+          <circle cx="80" cy="32" r="3" fill="#ff5a4e"/>
+          <path d="M53 97 Q62 90 71 97 M89 97 Q98 90 107 97 M66 114 Q80 126 94 114" ${INK} stroke-width="4"/>
+        </g>
+        <g class="mg m-sleepy">
+          <path d="M34 62 Q64 6 120 40 Q90 44 50 70 Z" fill="#7d6bd8"/><path d="M34 62 Q80 40 124 52" stroke="#fff" stroke-width="7" stroke-linecap="round" fill="none"/>
+          <circle cx="124" cy="40" r="7" fill="#fff"/>
+          <path d="M53 100 Q62 104 71 100 M89 100 Q98 104 107 100" ${INK} stroke-width="4"/><ellipse cx="80" cy="120" rx="5" ry="4" fill="#2a2d34"/>
+          <g fill="#7d6bd8" font-family="Fredoka, Nunito, sans-serif" font-weight="700"><text class="pom-z" x="136" y="64" font-size="18">z</text><text class="pom-z pom-z2" x="148" y="48" font-size="13">z</text></g>
+        </g>
+        <g class="mg m-shy">
+          <ellipse cx="62" cy="95" rx="10" ry="12" fill="#fff"/><ellipse cx="98" cy="95" rx="10" ry="12" fill="#fff"/>
+          <circle cx="57" cy="99" r="5.5" fill="#2a2d34"/><circle cx="93" cy="99" r="5.5" fill="#2a2d34"/>
+          <path d="M44 110 L48 104 M50 112 L54 106 M106 110 L110 104 M112 112 L116 106" stroke="#e0443a" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M70 118 Q76 122 80 118 Q84 114 90 118" ${INK} stroke-width="4"/>
+        </g>
+        <g transform="translate(-20 -16)">
+          <g class="gear g-scarf">
+            <path d="M52 140 Q100 162 148 140 L146 152 Q100 174 54 152 Z" fill="#4aa8ff"/>
+            <path d="M74 150 L75 160 M94 154 L94 164 M114 154 L113 164" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+            <path d="M124 154 L136 188 L120 184 Z" fill="#2f86e0"/>
+          </g>
+          <g class="gear g-medal">
+            <path d="M118 128 L124 146 L130 128" stroke="#ff5a4e" stroke-width="5" stroke-linejoin="round" fill="none"/>
+            <circle cx="124" cy="150" r="9" fill="#ffc533" stroke="#e0a400" stroke-width="2"/>
+            <path d="M124 144 L126 148 L130 148.5 L127 151.5 L128 156 L124 153.5 L120 156 L121 151.5 L118 148.5 L122 148 Z" fill="#fff"/>
+          </g>
+          <g class="gear g-glasses" stroke="#2a2d34" stroke-width="3" stroke-linecap="round">
+            <circle cx="82" cy="108" r="13" fill="rgba(255,255,255,0.18)"/><circle cx="118" cy="108" r="13" fill="rgba(255,255,255,0.18)"/>
+            <path d="M95 106 Q100 103 105 106 M69 105 L56 99 M131 105 L144 99" fill="none"/>
+          </g>
+          <g class="gear g-headphones">
+            <path d="M44 116 Q40 46 100 44 Q160 46 156 116" stroke="#2a2d34" stroke-width="7" stroke-linecap="round" fill="none"/>
+            <rect x="32" y="100" width="17" height="32" rx="8" fill="#9b7bff"/><rect x="151" y="100" width="17" height="32" rx="8" fill="#9b7bff"/>
+          </g>
+          <g class="gear g-cap">
+            <path d="M78 52 L122 52 L120 68 L80 68 Z" fill="#3a3f49"/>
+            <path d="M100 28 L150 43 L100 58 L50 43 Z" fill="#2a2d34"/>
+            <path d="M100 43 L142 47 L142 68" stroke="#ffc533" stroke-width="3" stroke-linecap="round" fill="none"/>
+            <circle cx="142" cy="71" r="4.5" fill="#ffc533"/>
+          </g>
+        </g>
+      </g></g>
+    </g>
+    <path class="evo-spark" ${EVO} d="M0 0" fill="#ffc533"/>
   </svg>`;
 
   const uid = () => Math.random().toString(36).slice(2, 9);
@@ -873,20 +1023,30 @@ dialog::backdrop { background: rgba(42, 45, 52, 0.35); }
   const streakAtRisk = s => !s.today && s.count > 0 && hour() >= 18;
   const lateNight = () => hour() >= 23 || hour() < 4;
 
-  // returns the new level when this award crossed one, else 0
-  function awardXP(n, say) {
+  // returns { level, evolved }: the new level if this award crossed one, and the new stage if Pom grew
+  // inSession: the end-of-pomodoro celebration announces the evolution itself
+  function awardXP(n, say, inSession) {
     const before = levelOf(xp).level;
     xp = Math.max(0, xp + n);
     store.set("xp", xp);
     const after = levelOf(xp).level;
+    const evolved = stageAt(after) !== stageAt(before) && after > before ? stageAt(after) : null;
     if (n > 0) {
       const f = document.createElement("span"); f.textContent = "+" + n;
       $("#xpFloat").append(f); setTimeout(() => f.remove(), 2400);
-      if (after > before) react("proud", `Level ${after}! Look at you go.`, 4500);
+      if (after > before) react("proud", evolved ? `I grew into a ${evolved[2]}! Thank you for all that focus.` : `Level ${after}! Look at you go.`, 4500);
       else if (say) react("cheer", say, 2600);
+      if (evolved && !inSession) {
+        celebrate({ mood: "proud", headline: `Pom grew into a ${evolved[2]}!`, lead: `Level ${after}.`, sub: nextStageLine(after), nextMode: timer.mode, auto: true, confetti: true, evolve: true });
+      }
+      checkUnlocks();
     }
     renderStats();
-    return after > before ? after : 0;
+    return { level: after > before ? after : 0, evolved };
+  }
+  function nextStageLine(level) {
+    const next = STAGES.find(s => s[0] > level);
+    return next ? `Next: ${next[2]} at level ${next[0]}` : "Fully grown. Pom is as golden as it gets.";
   }
   function react(mood, say, ms) {
     moodOverride = { mood, say, until: Date.now() + ms };
@@ -910,6 +1070,7 @@ dialog::backdrop { background: rgba(42, 45, 52, 0.35); }
   function updatePom() {
     const m = pomMood(), pom = $("#pom"), bubble = $("#bubble");
     pom.dataset.mood = m.mood;
+    applyEvo(pom);
     pom.querySelector("svg")?.setAttribute("aria-label", POM_LABELS[m.mood]);
     if (bubble.textContent !== m.say) {
       bubble.textContent = m.say;
@@ -958,6 +1119,124 @@ dialog::backdrop { background: rgba(42, 45, 52, 0.35); }
   }
   $("#nextIdea").addEventListener("click", () => { ideaIdx++; renderBreakCard(); });
 
+  // ---------- Pom evolves: level sets the form, streak the aura, today's pomodoros the energy, achievements the gear ----------
+  const STAGES = [[1, "seed", "Seed"], [3, "sprout", "Sprout"], [6, "blossom", "Blossom"], [10, "green", "Green Pom"], [15, "ripe", "Ripe Pom"], [25, "golden", "Golden Pom"]];
+  const stageAt = level => STAGES.reduce((s, x) => level >= x[0] ? x : s, STAGES[0]);
+  const AURAS = [[0, "none", "No aura"], [3, "ember", "Ember aura"], [7, "blaze", "Blaze aura"], [14, "violet", "Violet flame"], [30, "blue", "Blue flame"], [100, "star", "Starfire"]];
+  const auraAt = streak => AURAS.reduce((a, x) => streak >= x[0] ? x : a, AURAS[0]);
+  const FLAMES = {
+    ember: { n: 7, len: 26, w: 9, outer: "#ffb347", core: "#ffe08a" },
+    blaze: { n: 10, len: 34, w: 11, outer: "#ff6b3d", core: "#ffc533" },
+    violet: { n: 12, len: 38, w: 11, outer: "#9b7bff", core: "#e2d6ff" },
+    blue: { n: 12, len: 42, w: 12, outer: "#4aa8ff", core: "#d4ecff" },
+    star: { n: 14, len: 46, w: 12, outer: "#ffcf3a", core: "#ffffff" }
+  };
+  // flames fan out from behind Pom across the top 240 degrees
+  function flamePath(a, k) {
+    if (!a) return "";
+    let d = "";
+    for (let i = 0; i < a.n; i++) {
+      const t = (150 + i * (240 / (a.n - 1))) * Math.PI / 180, ux = Math.cos(t), uy = Math.sin(t);
+      const len = a.len * k * (i % 2 ? 0.82 : 1), w = a.w * k;
+      const p = (r, s) => `${(100 + ux * r - uy * s).toFixed(1)} ${(112 + uy * r + ux * s).toFixed(1)}`;
+      d += `M${p(40, w)} Q${p(40 + len * 0.55, w * 1.3)} ${p(40 + len, 0)} Q${p(40 + len * 0.55, -w * 1.3)} ${p(40, -w)} Z`;
+    }
+    return d;
+  }
+  const SPARK_AT = [[30, 60], [170, 54], [22, 128], [178, 120], [52, 28], [150, 24]];
+  const sparkPath = count => SPARK_AT.slice(0, count).map(([x, y], i) => {
+    const s = i % 2 ? 6 : 8, q = s * 0.3;
+    return `M${x} ${y - s} L${x + q} ${y - q} L${x + s} ${y} L${x + q} ${y + q} L${x} ${y + s} L${x - q} ${y + q} L${x - s} ${y} L${x - q} ${y - q} Z`;
+  }).join(" ");
+  const energyAt = (n, goal) => n === 0 ? ["low", "Waking up"] : n < Math.ceil(goal / 2) ? ["ok", "Warmed up"]
+    : n < goal ? ["good", "In the zone"] : n < goal + 2 ? ["radiant", "Radiant"] : ["onfire", "On fire"];
+
+  // lifetime stats that unlock gear; history only keeps 90 days, so these are counted separately
+  const evo = Object.assign({
+    total: Object.values(history).reduce((a, d) => a + d.n, 0),
+    goalHits: Object.values(history).filter(d => d.n >= settings.goal).length,
+    beats: 0, bestStreak: 0, unlocked: [], wearing: []
+  }, store.get("evo", {}));
+  const saveEvo = () => store.set("evo", evo);
+  const GEAR = [
+    { id: "glasses", name: "Study glasses", how: "Reach level 10", has: () => levelOf(xp).level, need: 10, unit: "levels" },
+    { id: "scarf", name: "Cozy scarf", how: "Keep a 7-day streak", has: () => evo.bestStreak, need: 7, unit: "days" },
+    { id: "headphones", name: "Headphones", how: "Focus 10 times with beats on", has: () => evo.beats, need: 10, unit: "sessions" },
+    { id: "cap", name: "Graduation cap", how: "Finish 100 pomodoros", has: () => evo.total, need: 100, unit: "pomodoros" },
+    { id: "medal", name: "Goal medal", how: "Hit your daily goal 10 times", has: () => evo.goalHits, need: 10, unit: "goals" },
+    { id: "cape", name: "Focus cape", how: "Keep a 30-day streak", has: () => evo.bestStreak, need: 30, unit: "days" }
+  ];
+  function evoState() {
+    const lv = levelOf(xp).level, s = streakInfo(), g = goalInfo();
+    return { level: lv, stage: stageAt(lv), aura: auraAt(s.count), energy: energyAt(g.n, g.goal), streak: s.count };
+  }
+  // paint stage, aura, energy and gear onto one of the Pom drawings on the page
+  function applyEvo(el, st = evoState()) {
+    if (!el || !el.querySelector("svg")) return;
+    el.dataset.stage = st.stage[1];
+    const a = FLAMES[st.aura[1]], k = st.stage[0] < 10 ? 0.85 : 1, e = st.energy[0];
+    const outer = el.querySelector(".aura-o"), inner = el.querySelector(".aura-i");
+    outer.setAttribute("d", flamePath(a, k)); outer.setAttribute("fill", a ? a.outer : "none");
+    inner.setAttribute("d", flamePath(a, k * 0.6)); inner.setAttribute("fill", a ? a.core : "none");
+    el.querySelector(".evo-glow").setAttribute("opacity", e === "radiant" ? 0.22 : e === "onfire" ? 0.32 : st.stage[1] === "golden" ? 0.15 : 0);
+    const sparks = Math.max({ low: 0, ok: 0, good: 2, radiant: 4, onfire: 6 }[e], st.stage[1] === "golden" ? 3 : 0, st.aura[1] === "star" ? 4 : 0);
+    el.querySelector(".evo-spark").setAttribute("d", sparkPath(sparks) || "M0 0");
+    GEAR.forEach(g => el.classList.toggle("wear-" + g.id, evo.wearing.includes(g.id)));
+  }
+  function checkUnlocks(quiet) {
+    const fresh = GEAR.filter(g => !evo.unlocked.includes(g.id) && g.has() >= g.need);
+    if (!fresh.length) return;
+    fresh.forEach(g => evo.unlocked.push(g.id));
+    saveEvo();
+    if (quiet) return;
+    const fits = levelOf(xp).level >= 10;
+    react("proud", `New gear: ${fresh.map(g => g.name.toLowerCase()).join(" and ")}! ${fits ? "Click me to try it on." : "It'll fit once I'm a tomato, at level 10."}`, 6000);
+  }
+
+  // ---------- Pom's closet: what Pom is now, what's next, and the gear ----------
+  const closet = $("#closet");
+  function renderCloset() {
+    const st = evoState(), lv = levelOf(xp), i = STAGES.indexOf(st.stage), next = STAGES[i + 1];
+    const ai = AURAS.indexOf(st.aura), nextAura = AURAS[ai + 1];
+    applyEvo($("#closetPom"), st);
+    $("#closetTitle").textContent = st.stage[2];
+    $("#closetLevel").textContent = `Level ${lv.level} · ${lv.into} of ${lv.need} XP to level ${lv.level + 1}`;
+    $("#closetBar").style.width = next ? Math.round((lv.level - st.stage[0] + lv.into / lv.need) / (next[0] - st.stage[0]) * 100) + "%" : "100%";
+    $("#closetNext").textContent = next ? `${next[2]} at level ${next[0]} · ${next[0] - lv.level} to go` : "Fully grown. Pom is as golden as it gets.";
+    $("#closetAura").textContent = st.aura[2] + (nextAura ? ` · ${nextAura[2]} in ${nextAura[0] - st.streak} ${nextAura[0] - st.streak === 1 ? "day" : "days"}` : "");
+    $("#closetEnergy").textContent = "Today: " + st.energy[1];
+    $("#closetHint").textContent = st.stage[0] < 10 ? "Gear fits once Pom is a tomato, at level 10. You can pick it now and it'll show up then." : "Pick what Pom wears. Everything you've unlocked stays yours.";
+    const grid = $("#gearGrid");
+    grid.innerHTML = "";
+    GEAR.forEach(g => {
+      const unlocked = evo.unlocked.includes(g.id), on = evo.wearing.includes(g.id);
+      const card = document.createElement("div");
+      card.className = "gear-card" + (on ? " on" : "") + (unlocked ? "" : " locked");
+      const name = document.createElement("b"); name.textContent = g.name;
+      const how = document.createElement("span"); how.textContent = g.how;
+      card.append(name, how);
+      if (unlocked) {
+        const btn = document.createElement("button");
+        btn.type = "button"; btn.className = "chunky"; btn.textContent = on ? "TAKE OFF" : "WEAR";
+        btn.setAttribute("aria-pressed", on);
+        btn.addEventListener("click", () => {
+          evo.wearing = on ? evo.wearing.filter(x => x !== g.id) : [...evo.wearing, g.id];
+          saveEvo(); renderCloset(); updatePom();
+        });
+        card.append(btn);
+      } else {
+        const have = Math.min(g.has(), g.need);
+        const bar = document.createElement("i"); const fill = document.createElement("u");
+        fill.style.width = Math.round(have / g.need * 100) + "%"; bar.append(fill);
+        const prog = document.createElement("span"); prog.textContent = `Locked · ${have} of ${g.need} ${g.unit}`;
+        card.append(bar, prog);
+      }
+      grid.append(card);
+    });
+  }
+  $("#pom").addEventListener("click", () => { renderCloset(); closet.showModal ? closet.showModal() : closet.setAttribute("open", ""); });
+  $("#closeCloset").addEventListener("click", () => closet.close());
+
   // ---------- Timer ----------
   const timer = { mode: "focus", remaining: settings.focus * 60000, endAt: 0, running: false, iv: 0 };
   const durationOf = m => settings[m] * 60000;
@@ -1001,13 +1280,19 @@ dialog::backdrop { background: rgba(42, 45, 52, 0.35); }
     if (!skipped && settings.chime) chime();
     const t = tasks.find(t => t.id === activeId);
     if (timer.mode === "focus") {
-      let leveled = 0;
+      let up = { level: 0, evolved: null };
       if (!skipped) {
         completedFocus++;
         store.set("completed", completedFocus);
         recordFocus(settings.focus);
         if (t) { t.done++; justFilled = { id: t.id, i: t.done - 1 }; saveTasks(); }
-        leveled = awardXP(settings.focus); // a minute of focus is worth 1 XP
+        // lifetime stats for gear
+        evo.total++;
+        if (audible()) evo.beats++;
+        if (goalInfo().n === settings.goal) evo.goalHits++;
+        evo.bestStreak = Math.max(evo.bestStreak, streakInfo().count);
+        saveEvo();
+        up = awardXP(settings.focus, null, true); // a minute of focus is worth 1 XP
       }
       const next = completedFocus > 0 && completedFocus % settings.every === 0 && !skipped ? "long" : "short";
       const auto = !skipped && settings.autoBreak;
@@ -1015,8 +1300,9 @@ dialog::backdrop { background: rgba(42, 45, 52, 0.35); }
       if (!skipped) {
         const g = goalInfo(), nextStep = t && (t.steps || []).find(s => !s.done);
         celebrate({
-          mood: leveled || g.n === g.goal ? "proud" : "cheer",
-          headline: leveled ? `Level ${leveled}!` : g.n === g.goal ? "Daily goal done!" : `Pomodoro #${g.n} done!`,
+          mood: up.level || g.n === g.goal ? "proud" : "cheer",
+          headline: up.evolved ? `Pom grew into a ${up.evolved[2]}!` : up.level ? `Level ${up.level}!` : g.n === g.goal ? "Daily goal done!" : `Pomodoro #${g.n} done!`,
+          evolve: !!up.evolved,
           lead: `${settings.focus} focused ${settings.focus === 1 ? "minute" : "minutes"}${t ? " on " : "."}`, em: t ? t.text : "",
           stats: { xp: settings.focus, level: levelOf(xp), goal: g, streak: streakInfo().count },
           sub: nextStep ? `After your break: ${nextStep.text}` : "",
@@ -1037,7 +1323,11 @@ dialog::backdrop { background: rgba(42, 45, 52, 0.35); }
   let cheerTimer = 0;
   const CONFETTI = ["#ff5a4e", "#3fbf6a", "#ffc533", "#4aa8ff", "#9b7bff", "#ff9f1c"];
   function celebrate(o) {
-    $("#celebPom").dataset.mood = o.mood;
+    const cp = $("#celebPom");
+    cp.dataset.mood = o.mood;
+    applyEvo(cp);
+    // an evolution flashes white and pops into the new form
+    cp.classList.remove("evolve"); void cp.offsetWidth; cp.classList.toggle("evolve", !!o.evolve);
     $("#cheerKicker").textContent = o.headline;
     const main = $("#cheerMain");
     main.textContent = o.lead;
@@ -1923,6 +2213,9 @@ dialog::backdrop { background: rgba(42, 45, 52, 0.35); }
   document.body.dataset.mode = timer.mode;
   $("#pom").innerHTML = POM_SVG;
   $("#celebPom").innerHTML = POM_SVG;
+  $("#closetPom").innerHTML = POM_SVG;
+  evo.bestStreak = Math.max(evo.bestStreak, streakInfo().count);
+  checkUnlocks(true); // returning users may already qualify for some gear
   renderSound(); renderTasks(); render();
 })();
 </script>

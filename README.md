@@ -24,6 +24,17 @@ Finishing things earns XP. A minute of focus is worth 1 XP, so a full pomodoro i
 
 XP adds up to levels, and the header shows your streak, which is the number of days in a row with at least one pomodoro. Under the timer, a row of tomatoes tracks your daily goal, six pomodoros by default. When a pomodoro ends, Pom celebrates with your XP, your goal and your streak, then reminds you of the next step for after your break. Below the tasks, a small chart shows the last seven days. It is a good feeling to see how much work you have done, so I wanted that in plain view.
 
+## Pom grows with you
+
+Pom changes as you keep showing up, and each kind of progress changes something different:
+
+- **Your level sets what Pom is.** Everyone starts with a seed in a pot. It becomes a sprout at level 3, a yellow blossom at 6 (tomato flowers really are yellow), a green tomato at 10, the ripe red Pom at 15, and a golden Pom at 25. At about six pomodoros a day, ripe takes around six weeks and golden around three and a half months. Each new stage gets its own celebration.
+- **Your streak lights an aura.** Flames appear behind Pom at 3 days and change color at 7, 14, 30 and 100. Miss a day and only the aura goes out. Pom keeps its stage and gear, so one bad day never undoes weeks of work.
+- **Today's pomodoros set Pom's energy.** Pom starts each day plain, then glows and sparkles as you get close to your daily goal and past it.
+- **Achievements unlock gear.** Study glasses, a cozy scarf, headphones, a graduation cap, a goal medal and a focus cape, each earned a different way. Click Pom to open its closet, see what's next, and choose what it wears. Gear fits once Pom is a tomato.
+
+Pom's moods sit on top of all this, so a golden Pom in a scarf still gets worried about an overdue task.
+
 ## Adding tasks
 
 There is one box for adding tasks. A few characters at the start decide where a task goes:
