@@ -24,16 +24,26 @@ Finishing things earns XP. A minute of focus is worth 1 XP, so a full pomodoro i
 
 XP adds up to levels, and the header shows your streak, which is the number of days in a row with at least one pomodoro. Under the timer, a row of tomatoes tracks your daily goal, six pomodoros by default. When a pomodoro ends, Pom celebrates with your XP, your goal and your streak, then reminds you of the next step for after your break. Below the tasks, a small chart shows the last seven days. It is a good feeling to see how much work you have done, so I wanted that in plain view.
 
-## Pom grows with you
+## Pom's path
 
-Pom changes as you keep showing up, and each kind of progress changes something different:
+Pom is a tomato from day one, and it trains as you level up. I wanted the avatar to show how well someone can focus, which feels like a rare skill these days, so each form is something you earn by putting in the hours:
 
-- **Your level sets what Pom is.** Everyone starts with a seed in a pot. It becomes a sprout at level 3, a yellow blossom at 6 (tomato flowers really are yellow), a green tomato at 10, the ripe red Pom at 15, and a golden Pom at 25. At about six pomodoros a day, ripe takes around six weeks and golden around three and a half months. Each new stage gets its own celebration.
-- **Your streak lights an aura.** Flames appear behind Pom at 3 days and change color at 7, 14, 30 and 100. Miss a day and only the aura goes out. Pom keeps its stage and gear, so one bad day never undoes weeks of work.
-- **Today's pomodoros set Pom's energy.** Pom starts each day plain, then glows and sparkles as you get close to your daily goal and past it.
-- **Achievements unlock gear.** Study glasses, a cozy scarf, headphones, a graduation cap, a goal medal and a focus cape, each earned a different way. Click Pom to open its closet, see what's next, and choose what it wears. Gear fits once Pom is a tomato.
+| Form | Level | Roughly when | What changes |
+|---|---|---|---|
+| Wanderer | 1 | day one | A straw hat and a long road ahead |
+| Student | 3 | 2 days | A training gi, a headband and a belt |
+| Monk | 10 | 2½ weeks | A saffron robe and cherry-tomato prayer beads |
+| Master | 15 | 6 weeks | Leafy brows, a beard and a staff |
+| Sage | 25 | 3½ months | Floats on a cloud with a halo of leaves |
+| Ascended | 40 | 9 months | Glowing gold, on a lotus |
 
-Pom's moods sit on top of all this, so a golden Pom in a scarf still gets worried about an overdue task.
+The times assume about six pomodoros a day. A new form takes weeks, so Pom also picks up small upgrades in between: the belt goes from white to yellow, green and black, the monk gains two beads each level, the staff sprouts leaves, and the sage's halo fills in one leaf at a time. Each new form gets its own celebration.
+
+Two other things change Pom's look. Your streak lights an aura of flames behind it, starting at 3 days and changing color at 7, 14, 30 and 100. Miss a day and only the aura goes out, so one bad day never undoes weeks of work. Today's pomodoros set Pom's energy, so it glows and sparkles as you get close to your daily goal and past it.
+
+Click Pom to see its path: where it is now, what comes next, and the forms still ahead as shadows. The last one stays a secret until you get there. From there, Share my Pom saves a picture of Pom with your level, streak, hours focused and pomodoros, sized for Instagram and group chats. The picture is made in your browser, so nothing is uploaded unless you post it yourself.
+
+Pom's moods sit on top of all this, so a Master still gets worried about an overdue task.
 
 ## Adding tasks
 
