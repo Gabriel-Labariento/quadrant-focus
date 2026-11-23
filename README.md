@@ -2,9 +2,9 @@
 
 A pomodoro timer, an Eisenhower matrix, and binaural beats on one page, with a small tomato named Pom to keep you company.
 
-Use it at [quadrant-focus.vercel.app](https://quadrant-focus.vercel.app).
+Use it at [focus.gmpl.dev](https://focus.gmpl.dev).
 
-![Quadrant Focus, with Pom the tomato and the timer on the left, four colored quadrant cards on the right, and a daily goal and week chart underneath](docs/screenshot.jpg)
+![Quadrant Focus, with Pom the tomato as a monk with prayer beads and a flame aura above the timer on the left, four colored quadrant cards on the right, and a daily goal and week chart underneath](docs/screenshot.jpg)
 
 I wanted three things in one place: the simple timer of [Pomofocus](https://pomofocus.io), an Eisenhower matrix for deciding what deserves my pomodoros in the first place, and binaural beats for when I need help settling in. Most tools give you one of these. Quadrant Focus puts them on a single page, and Pom makes the long study sessions feel a little less lonely.
 
