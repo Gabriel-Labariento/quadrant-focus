@@ -714,6 +714,7 @@ dialog::backdrop { background: rgba(42, 45, 52, 0.35); }
     <div class="cheer-actions">
       <button type="button" class="cheer-btn chunky" id="cheerBtn"></button>
       <button type="button" class="cheer-skip" id="cheerSkip">Skip the break</button>
+      <button type="button" class="cheer-skip" id="cheerBackup" hidden>Save a backup of Pom</button>
     </div>
   </div>
 </div>
@@ -764,6 +765,13 @@ dialog::backdrop { background: rgba(42, 45, 52, 0.35); }
       <button type="button" class="mini" id="copyMd">Copy as Markdown</button>
     </div>
     <p class="hint">Due dates become all-day events in Google or Apple Calendar. Notion imports the CSV as a database, and the Markdown pastes into any page as a checklist.</p>
+    <h4>Backup</h4>
+    <div class="exports">
+      <button type="button" class="mini" id="backupBtn">Download backup</button>
+      <button type="button" class="mini" id="restoreBtn">Restore a backup</button>
+      <input type="file" id="restoreFile" accept=".json,application/json" hidden>
+    </div>
+    <p class="hint" id="backupHint"></p>
     <h4>Data</h4>
     <label class="toggle" for="resetCount">Restart the long-break cycle <button type="button" class="mini" id="resetCount">Restart</button></label>
     <div class="dlg-foot">
@@ -1484,6 +1492,7 @@ dialog::backdrop { background: rgba(42, 45, 52, 0.35); }
         if (t) evo.qxp[t.q] = (evo.qxp[t.q] || 0) + settings.focus;
         saveEvo();
         up = awardXP(settings.focus, null, true); // a minute of focus is worth 1 XP
+        keepData();
       }
       const next = completedFocus > 0 && completedFocus % settings.every === 0 && !skipped ? "long" : "short";
       const auto = !skipped && settings.autoBreak;
@@ -1537,6 +1546,8 @@ dialog::backdrop { background: rgba(42, 45, 52, 0.35); }
     $("#cheerBtn").textContent = o.auto ? "Got it" : names[o.nextMode];
     $("#cheerBtn").dataset.start = o.auto ? "" : "1";
     $("#cheerSkip").hidden = o.auto || o.nextMode === "focus";
+    $("#cheerBackup").hidden = !o.evolve;
+    $("#cheerBackup").textContent = "Save a backup of Pom";
     const conf = $("#confetti");
     conf.innerHTML = o.confetti ? Array.from({ length: 24 }, (_, i) =>
       `<span style="left:${(i * 53) % 100}%;width:${8 + (i % 3) * 4}px;background:${CONFETTI[i % CONFETTI.length]};animation-delay:${((i * 0.37) % 3.4).toFixed(2)}s"></span>`).join("") : "";
@@ -1551,6 +1562,7 @@ dialog::backdrop { background: rgba(42, 45, 52, 0.35); }
     if (e.currentTarget.dataset.start && !timer.running) start();
   });
   $("#cheerSkip").addEventListener("click", () => { hideCheer(); setMode("focus"); });
+  $("#cheerBackup").addEventListener("click", e => { clearTimeout(cheerTimer); downloadBackup(); e.currentTarget.textContent = "Backup saved"; });
   document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("#cheer").hidden) hideCheer(); });
 
   const fmt = ms => {
@@ -2250,6 +2262,72 @@ dialog::backdrop { background: rgba(42, 45, 52, 0.35); }
     catch { flash(btn, "Couldn't copy"); }
   });
 
+  // ---------- Backup: everything lives in this browser, so let people keep a copy ----------
+  // Ask the browser not to clear our storage when the device runs low on space.
+  // Chrome and Safari decide silently, Firefox may ask once. Clearing site data by hand still wipes it.
+  async function keepData() {
+    try {
+      if (navigator.storage?.persist && !(await navigator.storage.persisted())) await navigator.storage.persist();
+    } catch {}
+  }
+  const NOT_BACKED_UP = new Set(["backupAt", "nudgedAt"]);
+  function backupData() {
+    const data = {};
+    try {
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (!k.startsWith("qf:") || NOT_BACKED_UP.has(k.slice(3))) continue;
+        const v = localStorage.getItem(k);
+        try { data[k.slice(3)] = JSON.parse(v); } catch { data[k.slice(3)] = v; }
+      }
+    } catch {}
+    return data;
+  }
+  const pomLine = (xpTotal, n) => { const L = levelOf(xpTotal || 0).level; return `a Level ${L} ${formAt(L)[2]}${n == null ? "" : ` with ${n} ${n === 1 ? "task" : "tasks"}`}`; };
+  function downloadBackup() {
+    const now = new Date();
+    download(`quadrant-focus-backup-${ymd(now)}.json`, "application/json", JSON.stringify({
+      app: "quadrant-focus", version: 1, savedAt: now.toISOString(),
+      pom: pomLine(xp, tasks.length), data: backupData()
+    }, null, 2));
+    store.set("backupAt", now.getTime());
+    renderBackupHint();
+  }
+  const shortDate = ms => new Date(ms).toLocaleDateString(undefined, { month: "short", day: "numeric", year: new Date(ms).getFullYear() === new Date().getFullYear() ? undefined : "numeric" });
+  function renderBackupHint() {
+    const at = store.get("backupAt", 0);
+    $("#backupHint").textContent = at
+      ? `Last backup: ${shortDate(at)}. Save a new one after a big week, and keep it somewhere other than this device.`
+      : "Pom, your tasks and your history live only in this browser. Clearing site data or switching phones starts over, so keep a backup somewhere safe.";
+  }
+  $("#backupBtn").addEventListener("click", e => { downloadBackup(); flash(e.currentTarget, "Backup saved"); });
+  $("#restoreBtn").addEventListener("click", () => $("#restoreFile").click());
+  $("#restoreFile").addEventListener("change", async e => {
+    const file = e.target.files[0], btn = $("#restoreBtn");
+    e.target.value = "";
+    if (!file) return;
+    let b;
+    try { b = JSON.parse(await file.text()); } catch { b = null; }
+    if (!b || b.app !== "quadrant-focus" || !b.data || typeof b.data !== "object") return flash(btn, "That isn't a backup");
+    const when = Date.parse(b.savedAt);
+    const n = Array.isArray(b.data.tasks) ? b.data.tasks.length : null;
+    const ok = confirm(`Restore the backup${when ? " from " + shortDate(when) : ""}?\n\nPom will be ${pomLine(+b.data.xp, n)}. This replaces everything in this browser right now, and the page reloads.`);
+    if (!ok) return;
+    try {
+      Object.keys(localStorage).filter(k => k.startsWith("qf:")).forEach(k => localStorage.removeItem(k));
+      Object.entries(b.data).forEach(([k, v]) => { if (!NOT_BACKED_UP.has(k)) localStorage.setItem("qf:" + k, JSON.stringify(v)); });
+      localStorage.setItem("qf:backupAt", JSON.stringify(when || Date.now()));
+    } catch { return flash(btn, "Couldn't restore"); }
+    location.reload();
+  });
+  // Every few days, if there's real progress and no recent backup, Pom brings it up once
+  function nudgeBackup() {
+    const DAY = 864e5, now = Date.now();
+    if (evo.total < 8 || now - store.get("backupAt", 0) < 14 * DAY || now - store.get("nudgedAt", 0) < 3 * DAY) return;
+    store.set("nudgedAt", now);
+    setTimeout(() => { if (!timer.running) react("happy", "We've come a long way together. Save a backup in Settings so I never get lost?", 9000); }, 1500);
+  }
+
   // ---------- Quick add ----------
   // "!" marks urgent, "*" marks important, "-" sends to Eliminate, "~3" at the end sets the estimate.
   const QUICK_PREFIX = { 1: "!* ", 2: "* ", 3: "! ", 4: "- " };
@@ -2371,6 +2449,7 @@ dialog::backdrop { background: rgba(42, 45, 52, 0.35); }
     $("#setFocus").value = settings.focus; $("#setShort").value = settings.short; $("#setLong").value = settings.long;
     $("#setEvery").value = settings.every; $("#setGoal").value = settings.goal; $("#setAutoBreak").checked = settings.autoBreak;
     $("#setAutoFocus").checked = settings.autoFocus; $("#setChime").checked = settings.chime;
+    renderBackupHint();
     dlg.showModal ? dlg.showModal() : dlg.setAttribute("open", "");
   });
   $("#cancelSettings").addEventListener("click", () => dlg.close());
@@ -2410,6 +2489,8 @@ dialog::backdrop { background: rgba(42, 45, 52, 0.35); }
   evo.bestStreak = Math.max(evo.bestStreak, streakInfo().count);
   saveEvo();
   renderSound(); renderTasks(); render();
+  if (evo.total > 0) keepData();
+  nudgeBackup();
 })();
 </script>
 </body>

@@ -97,6 +97,11 @@ Frankly, the research on whether binaural beats help focus is mixed. I treat the
 
 There is no account and no server. Tasks, settings, XP, and your pomodoro history are saved in your browser's local storage, so they stay on one device and in one browser. Clearing your site data, or opening the page in a private window, starts you from scratch.
 
+To keep your progress safe:
+
+- **Back it up.** In Settings, **Download backup** saves everything (Pom, XP, tasks, history and settings) as one small `.json` file. **Restore a backup** loads it back on any device or browser, replacing what is there. Pom offers a backup when it reaches a new form, and reminds you every few days if your last one is more than two weeks old.
+- **The app asks your browser to keep its data.** After your first pomodoro, the app asks your browser not to clear its storage when the device runs low on space. Browsers decide this themselves, so treat it as a safety net and keep a backup too.
+
 ## Keyboard shortcuts
 
 `Space` starts or pauses the timer, `S` skips to the next session, `B` turns the beats on or off, and `V` switches to the next view.
